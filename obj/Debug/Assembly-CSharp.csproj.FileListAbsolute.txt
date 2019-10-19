@@ -283,3 +283,7 @@ C:\Users\Don-Oskar Gashi\Google Drive\Projects\Gnostic metroidvania\obj\Debug\As
 C:\Users\Don-Oskar Gashi\Google Drive\Projects\Gnostic metroidvania\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\Users\Don-Oskar Gashi\Google Drive\Projects\Gnostic metroidvania\obj\Debug\Assembly-CSharp.dll
 C:\Users\Don-Oskar Gashi\Google Drive\Projects\Gnostic metroidvania\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Don-Oskar Gashi\Documents\GitHub\Project-Gnostic-Metroidvania\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+C:\Users\Don-Oskar Gashi\Documents\GitHub\Project-Gnostic-Metroidvania\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+C:\Users\Don-Oskar Gashi\Documents\GitHub\Project-Gnostic-Metroidvania\obj\Debug\Assembly-CSharp.dll
+C:\Users\Don-Oskar Gashi\Documents\GitHub\Project-Gnostic-Metroidvania\obj\Debug\Assembly-CSharp.pdb

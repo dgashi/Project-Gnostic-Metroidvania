@@ -11,7 +11,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{FF6EDDBC-3A8B-4B0E-E51D-B325DAFE117D}</ProjectGuid>
+    <ProjectGuid>{E8BFEBEF-61F6-E5FA-369C-18CADACE0ED9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -71,54 +71,51 @@
     <Compile Include="Assets\Scripts\PlatformController.cs" />
     <Compile Include="Assets\Scripts\PlatformWaker.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\Raycast\Controller2D.cs" />
-    <Compile Include="Assets\Scripts\Raycast\Player.cs" />
-    <Compile Include="Assets\Scripts\Raycast\RaycastController.cs" />
     <Compile Include="Assets\Scripts\Utilities.cs" />
+    <Reference Include="Unity.Timeline.Editor">
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.2D.PixelPerfect.Editor">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.2D.PixelPerfect.Editor.dll</HintPath>
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.2D.PixelPerfect.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Tilemap.Extras.Editor">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.2D.Tilemap.Extras.Editor.dll</HintPath>
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.2D.Tilemap.Extras.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Rider.Editor">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.2D.PixelPerfect">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.2D.PixelPerfect.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.2D.Tilemap.Extras">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.2D.Tilemap.Extras.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Timeline.Editor">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.CollabProxy.Editor">
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Rider.Editor">
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Tilemap.Editor">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.PixelPerfect">
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.2D.PixelPerfect.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Tilemap.Extras">
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.2D.Tilemap.Extras.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>C:/Users/Don-Oskar Gashi/Google Drive/Projects/Gnostic metroidvania/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.2f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

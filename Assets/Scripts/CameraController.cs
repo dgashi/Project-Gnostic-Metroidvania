@@ -5,14 +5,14 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     GameObject player;
-    Player playerScript;
+    PlayerController playerScript;
     public float cameraSpeed;
     public bool lerpFollow = true;
 
     void Start()
     {
         player = GameObject.FindGameObjectsWithTag("Player")[0];
-        playerScript = player.GetComponent<Player>();
+        playerScript = player.GetComponent<PlayerController>();
     }
 
     void LateUpdate()

@@ -289,7 +289,7 @@ public class PlayerControllerOld : MonoBehaviour
     {
         if (yAxis < 0f && elementButton)
         {
-            PrefabUtility.InstantiatePrefab(Instantiate(earthPrefab, new Vector3(transform.position.x, transform.position.y - playerDimensionX / 2 - 0.25f, 0f), Quaternion.Euler(0, 0, 0)));
+            //PrefabUtility.InstantiatePrefab(Instantiate(earthPrefab, new Vector3(transform.position.x, transform.position.y - playerDimensionX / 2 - 0.25f, 0f), Quaternion.Euler(0, 0, 0)));
         }
     }
 
