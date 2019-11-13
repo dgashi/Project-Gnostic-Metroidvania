@@ -76,6 +76,8 @@ public class GroundedCharacterController : MonoBehaviour
         if (belowInput.collidingPlatformControllers.Count != 0)
         {
             platformBelowController = belowInput.collidingPlatformControllers[belowInput.collidingPlatformControllers.Count - 1];
+
+            Debug.Log(platformBelowController.gameObject.name);
         }
         else
         {

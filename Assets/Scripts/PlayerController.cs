@@ -7,6 +7,11 @@ public class PlayerController : GroundedCharacterController
     public float moveSpeed;
     public float acceleration;
     public float jumpForce;
+    public Vector2 wallJumpModifier;
+
+    public float maxTeleportDistance;
+    [SerializeField]
+    private float teleportDistance;
 
     public float playerCenterOffset;
     public float smallerDimension;
@@ -17,6 +22,7 @@ public class PlayerController : GroundedCharacterController
     public float groundCheckDistance;
     public float wallCheckDistance;
 
+    [SerializeField]
     private float direction = 1;
 
     private PlatformController platformInFrontController;
@@ -36,6 +42,14 @@ public class PlayerController : GroundedCharacterController
     private bool isSqueezedUpright;
     [SerializeField]
     private bool isSqueezedLying;
+    [SerializeField]
+    private bool isSqueezedTeleport = false;
+    [SerializeField]
+    private bool hasAirJumped = false;
+    [SerializeField]
+    private bool dontStopX = false;
+    [SerializeField]
+    private bool dontMoveX = false;
 
     public GameObject sprite;
 
@@ -63,44 +77,41 @@ public class PlayerController : GroundedCharacterController
         isSqueezedLying = Physics2D.OverlapBox(new Vector2(transform.position.x + direction * playerCenterOffset, transform.position.y), new Vector2(biggerDimension - 0.02f, smallerDimension - 0.02f), 0f, whatIsPlatform);
         isSqueezedUpright = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - playerCenterOffset), new Vector2(smallerDimension - 0.02f, biggerDimension - 0.02f), 0f, whatIsPlatform);
         
-        //Jump
-        if (Input.GetButtonDown("X") && belowInput.isColliding)
+        //Reset variables when grounded
+        if(belowInput.isColliding)
         {
-            if (isSliding)
-            {
-                velocity.y = jumpForce / 3 * 2;
-            }
-            else
-            {
-                velocity.y = jumpForce;
-            }
+            dontStopX = false;
+            dontMoveX = false;
+            hasAirJumped = false;
         }
 
         //Move left and right
         if (!isSliding && !isGrabbed)
         {
-            if (Input.GetAxis("Horizontal") != 0)
+            if (Input.GetAxis("Horizontal") != 0 && !dontMoveX)
             {
                 direction = Mathf.Sign(Input.GetAxis("Horizontal"));
                 velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction, Time.deltaTime * acceleration);
                 transform.localScale = new Vector3(direction, 1, 1);
             }
-            else
+            else if (!dontStopX)
             {
                 velocity.x = Mathf.Lerp(velocity.x, 0, Time.deltaTime * acceleration);
             }
         }
 
         //Grab Wall
-        if (Input.GetButton("R1") && isCloseToWall && !isSliding && !isGrabbed)
+        if (Input.GetButton("R1") && isCloseToWall && !isSliding && !isGrabbed && !belowInput.isColliding && isColliderUpright)
         {
             isGrabbed = true;
-            Debug.Log("Grabbing wall");
         }
 
         //While grabbed
         if (isGrabbed)
         {
+            dontStopX = false;
+            dontMoveX = false;
+
             velocity.y = 0;
 
             if (frontInput.isColliding)
@@ -123,6 +134,35 @@ public class PlayerController : GroundedCharacterController
             }
         }
 
+        //Jump
+        if (Input.GetButtonDown("X") && belowInput.isColliding)
+        {
+            if (isSliding)
+            {
+                velocity.y = jumpForce / 3 * 2;
+            }
+            else
+            {
+                velocity.y = jumpForce;
+            }
+        }
+        else if (Input.GetButtonDown("X") && isGrabbed)
+        {
+            direction = -direction;
+            transform.localScale = new Vector3(direction, 1, 1);
+            velocity = new Vector2(moveSpeed * direction, jumpForce) * wallJumpModifier;
+            dontStopX = true;
+            dontMoveX = true;
+            isGrabbed = false;
+        }
+        else if (Input.GetButtonDown("X") && !hasAirJumped && !isSliding)
+        {
+            velocity.y = jumpForce;
+            hasAirJumped = true;
+            dontStopX = false;
+            dontMoveX = false;
+        }
+
         //Initiate slide
         if (Input.GetButtonDown("R2") && isCloseToGround && !isSliding && !isGrabbed)
         {
@@ -136,7 +176,6 @@ public class PlayerController : GroundedCharacterController
             }
 
             sprite.transform.localRotation = Quaternion.Euler(0, 0, 90f);
-            velocity.x = moveSpeed * direction * 3;
             isSliding = true;
         }
 
@@ -144,6 +183,8 @@ public class PlayerController : GroundedCharacterController
         if (isSliding)
         {
             slideStartTimer = slideStartTimer - Time.deltaTime;
+
+            velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction * 3, Time.deltaTime * acceleration / 2);
 
             if (!isSqueezedLying)
             {
@@ -165,6 +206,27 @@ public class PlayerController : GroundedCharacterController
         {
             sprite.transform.localRotation = Quaternion.Euler(0, 0, 0);
             RaiseUpColliders();
+        }
+
+        //Teleport
+        if (!isSliding && Input.GetButton("L1"))
+        {
+            for (int distance = 0; distance / 10f <= maxTeleportDistance; distance++)
+            {
+                isSqueezedTeleport = Physics2D.OverlapBox(new Vector2(transform.position.x + distance * 0.1f * direction, transform.position.y + bc.size.y / 2 - bc.size.x / 2), new Vector2(bc.size.x - 0.1f, bc.size.y - 0.1f), 0f, whatIsPlatform);
+                if (!isSqueezedTeleport)
+                {
+                    teleportDistance = distance * 0.1f;
+                }
+            }
+        }
+
+        if (!isSliding && Input.GetButtonUp("L1"))
+        {
+            isGrabbed = false;
+            velocity.y = 0;
+            velocity.x = 0;
+            transform.position = new Vector3(transform.position.x + direction * teleportDistance, transform.position.y, transform.position.z);
         }
     }
 

@@ -10,11 +10,13 @@ public class PlatformController : MonoBehaviour
     private Vector2 velocity;
     private Rigidbody2D rb;
     private HashSet<Rigidbody2D> passengerrbs;
+    private HashSet<Rigidbody2D> movedpassengerrbs;
     int direction = 1;
 
     private void Start()
     {
         passengerrbs = new HashSet<Rigidbody2D>();
+        movedpassengerrbs = new HashSet<Rigidbody2D>();
         rb = GetComponent<Rigidbody2D>();
         timer = 0;
     }
@@ -30,17 +32,21 @@ public class PlatformController : MonoBehaviour
         }
 
         velocity = move * direction;
+        movedpassengerrbs.Clear();
     }
 
     private void FixedUpdate()
     {
         rb.velocity = velocity;
-
         if (passengerrbs.Count != 0)
         {
             foreach (Rigidbody2D i in passengerrbs)
             {
-                i.velocity += velocity;
+                if (!movedpassengerrbs.Contains(i))
+                {
+                    i.velocity += velocity;
+                    movedpassengerrbs.Add(i);
+                }
             }
         }
     }
