@@ -7,6 +7,14 @@ TagManager:
   - Collider and Sprite
   - Earth Block
   - Platforms
+  - 1 Damage
+  - Minor Checkpoint
+  - 1 Mana
+  - AboveCollider
+  - BelowCollider
+  - FrontCollider
+  - BackCollider
+  - Decoy
   layers:
   - Default
   - TransparentFX
@@ -17,9 +25,9 @@ TagManager:
   - 
   - 
   - Ground
-  - Player
+  - Characters
   - Falling Earth Block
-  - 
+  - Environmental Damage
   - 
   - 
   - 
@@ -41,12 +49,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Default
-    uniqueID: 0
+  - name: Background 1
+    uniqueID: 1139727731
     locked: 0
   - name: Player
     uniqueID: 670027121
     locked: 0
   - name: Platforms
     uniqueID: 404000179
+    locked: 0
+  - name: Default
+    uniqueID: 0
     locked: 0

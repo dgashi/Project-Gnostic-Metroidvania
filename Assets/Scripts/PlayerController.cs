@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class PlayerController : GroundedCharacterController
+public class PlayerController : FallingObjectController
 {
+    public bool disableAirJump;
     public float moveSpeed;
     public float acceleration;
     public float jumpForce;
     public Vector2 wallJumpModifier;
+    public LayerMask whatIsDamage;
 
     public float maxTeleportDistance;
     [SerializeField]
@@ -21,14 +24,25 @@ public class PlayerController : GroundedCharacterController
 
     public float groundCheckDistance;
     public float wallCheckDistance;
+    public float checkInset;
 
     [SerializeField]
     private float direction = 1;
+    public int maxHealth;
+    [SerializeField]
+    private int currentHealth;
+    public int maxMana;
+    [SerializeField]
+    private int currentMana;
+    private HashSet<GameObject> hasBeenPickedUp;
 
     private PlatformController platformInFrontController;
 
+    [SerializeField]
     private bool isColliderLying;
+    [SerializeField]
     private bool isColliderUpright;
+    [SerializeField]
     private bool isColliderBunched;
     [SerializeField]
     private bool isGrabbed = false;
@@ -47,12 +61,22 @@ public class PlayerController : GroundedCharacterController
     [SerializeField]
     private bool hasAirJumped = false;
     [SerializeField]
+    private bool hasTeleported = false;
+    [SerializeField]
     private bool dontStopX = false;
     [SerializeField]
     private bool dontMoveX = false;
+    [SerializeField]
+    private bool isInvincible;
 
+    public Transform defaultCheckPoint;
+    public Transform lastCheckPoint;
     public GameObject sprite;
-
+    private Camera cam;
+    private CameraController camController;
+    public Image damageScreen;
+    public Text healthText;
+    public Text manaText;
 
     public override void Start()
     {
@@ -62,171 +86,230 @@ public class PlayerController : GroundedCharacterController
         UpdateEdgeCollidersUpright();
 
         isColliderLying = false;
+
+        currentHealth = maxHealth;
+
+        cam = Camera.main;
+        camController = cam.GetComponent<CameraController>();
+
+        lastCheckPoint = defaultCheckPoint;
+
+        hasBeenPickedUp = new HashSet<GameObject>();
+
+        healthText.text = "Health: " + currentHealth;
+        manaText.text = "Mana: " + currentMana;
     }
 
 
     public override void Update()
     {
-        base.Update();
-
-        playerCenterOffset = -(biggerDimension - smallerDimension) / 2;
-
-        isCloseToGround = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - bc.size.x / 2), new Vector2(bc.size.x - 0.1f, groundCheckDistance * 2), 0f, whatIsPlatform);
-        isCloseToWall = Physics2D.OverlapBox(new Vector2(transform.position.x + direction * bc.size.x / 2, transform.position.y), new Vector2(wallCheckDistance * 2, bc.size.x - 0.1f), 0f, whatIsPlatform);
-
-        isSqueezedLying = Physics2D.OverlapBox(new Vector2(transform.position.x + direction * playerCenterOffset, transform.position.y), new Vector2(biggerDimension - 0.02f, smallerDimension - 0.02f), 0f, whatIsPlatform);
-        isSqueezedUpright = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - playerCenterOffset), new Vector2(smallerDimension - 0.02f, biggerDimension - 0.02f), 0f, whatIsPlatform);
-        
-        //Reset variables when grounded
-        if(belowInput.isColliding)
+        if(Time.timeScale != 0)
         {
-            dontStopX = false;
-            dontMoveX = false;
-            hasAirJumped = false;
-        }
+            base.Update();
 
-        //Move left and right
-        if (!isSliding && !isGrabbed)
-        {
-            if (Input.GetAxis("Horizontal") != 0 && !dontMoveX)
+            playerCenterOffset = -(biggerDimension - smallerDimension) / 2;
+
+            isCloseToGround = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - bc.size.x / 2), new Vector2(bc.size.x - checkInset * 2, groundCheckDistance * 2), 0f, whatIsPlatform);
+            if (isColliderLying)
             {
-                direction = Mathf.Sign(Input.GetAxis("Horizontal"));
-                velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction, Time.deltaTime * acceleration);
-                transform.localScale = new Vector3(direction, 1, 1);
-            }
-            else if (!dontStopX)
-            {
-                velocity.x = Mathf.Lerp(velocity.x, 0, Time.deltaTime * acceleration);
-            }
-        }
-
-        //Grab Wall
-        if (Input.GetButton("R1") && isCloseToWall && !isSliding && !isGrabbed && !belowInput.isColliding && isColliderUpright)
-        {
-            isGrabbed = true;
-        }
-
-        //While grabbed
-        if (isGrabbed)
-        {
-            dontStopX = false;
-            dontMoveX = false;
-
-            velocity.y = 0;
-
-            if (frontInput.isColliding)
-            {
-                velocity.x = 0;
-
-                if (frontInput.collidingPlatformControllers.Count != 0)
-                {
-                    frontInput.collidingPlatformControllers[belowInput.collidingPlatformControllers.Count - 1].AddPassengerRB(rb);
-                }
+                isCloseToWall = Physics2D.OverlapBox(new Vector2(transform.position.x + direction * bc.size.y / 2, transform.position.y), new Vector2(wallCheckDistance * 2, bc.size.y - checkInset * 2), 0f, whatIsPlatform);
             }
             else
             {
-                velocity.x = direction * 100;
+                isCloseToWall = Physics2D.OverlapBox(new Vector2(transform.position.x + direction * bc.size.x / 2, transform.position.y), new Vector2(wallCheckDistance * 2, bc.size.x - checkInset * 2), 0f, whatIsPlatform);
             }
 
-            if (Input.GetButtonUp("R1"))
+            if (!isColliderLying)
             {
+                isSqueezedLying = Physics2D.OverlapBox(new Vector2(transform.position.x + direction * playerCenterOffset, transform.position.y), new Vector2(biggerDimension - 0.02f, smallerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
+            }
+            else if (!isColliderUpright)
+            {
+                isSqueezedUpright = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - playerCenterOffset), new Vector2(smallerDimension - 0.02f, biggerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
+            }
+
+            //Reset variables when grounded
+            if (isCloseToGround)
+            {
+                dontStopX = false;
+                dontMoveX = false;
+                hasAirJumped = false;
+                hasTeleported = false;
+            }
+
+            //Move left and right
+            if (!isSliding && !isGrabbed)
+            {
+                if (Input.GetAxis("Horizontal") != 0 && !dontMoveX)
+                {
+                    direction = Mathf.Sign(Input.GetAxis("Horizontal"));
+                    velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction, Time.deltaTime * acceleration);
+                    transform.localScale = new Vector3(direction, 1, 1);
+                }
+                else if (!dontStopX)
+                {
+                    velocity.x = Mathf.Lerp(velocity.x, 0, Time.deltaTime * acceleration);
+                }
+            }
+
+            //Grab Wall
+            if (Input.GetButton("R1") && isCloseToWall && !isSliding && !isGrabbed && !belowInput.isColliding && isColliderUpright)
+            {
+                isGrabbed = true;
+                dontStopX = false;
+                dontMoveX = false;
+                hasAirJumped = false;
+                hasTeleported = false;
+            }
+
+            //While grabbed
+            if (isGrabbed)
+            {
+
+                velocity.y = 0;
+
+                if (frontInput.isColliding)
+                {
+                    velocity.x = 0;
+
+                    if (frontInput.collidingPlatformControllers.Count != 0)
+                    {
+                        frontInput.collidingPlatformControllers[belowInput.collidingPlatformControllers.Count - 1].AddPassengerRB(rb);
+                    }
+                }
+                else
+                {
+                    velocity.x = direction * 100;
+                }
+
+                if (Input.GetButtonUp("R1"))
+                {
+                    isGrabbed = false;
+                }
+            }
+
+            //Jump
+            if (Input.GetButtonDown("X") && isCloseToGround)
+            {
+                if (isSliding)
+                {
+                    velocity.y = jumpForce / 3 * 2;
+                }
+                else
+                {
+                    velocity.y = jumpForce;
+                }
+            }
+            else if (Input.GetButtonDown("X") && isGrabbed)
+            {
+                direction = -direction;
+                transform.localScale = new Vector3(direction, 1, 1);
+                velocity = new Vector2(moveSpeed * direction, jumpForce) * wallJumpModifier;
+                dontStopX = true;
+                dontMoveX = true;
                 isGrabbed = false;
             }
-        }
-
-        //Jump
-        if (Input.GetButtonDown("X") && belowInput.isColliding)
-        {
-            if (isSliding)
-            {
-                velocity.y = jumpForce / 3 * 2;
-            }
-            else
+            else if (Input.GetButtonDown("X") && !hasAirJumped && !isSliding && !disableAirJump)
             {
                 velocity.y = jumpForce;
-            }
-        }
-        else if (Input.GetButtonDown("X") && isGrabbed)
-        {
-            direction = -direction;
-            transform.localScale = new Vector3(direction, 1, 1);
-            velocity = new Vector2(moveSpeed * direction, jumpForce) * wallJumpModifier;
-            dontStopX = true;
-            dontMoveX = true;
-            isGrabbed = false;
-        }
-        else if (Input.GetButtonDown("X") && !hasAirJumped && !isSliding)
-        {
-            velocity.y = jumpForce;
-            hasAirJumped = true;
-            dontStopX = false;
-            dontMoveX = false;
-        }
-
-        //Initiate slide
-        if (Input.GetButtonDown("R2") && isCloseToGround && !isSliding && !isGrabbed)
-        {
-            if (!isSqueezedLying)
-            {
-                LayDownColliders();
-            }
-            else
-            {
-                BunchUpColliders();
+                hasAirJumped = true;
+                dontStopX = false;
+                dontMoveX = false;
             }
 
-            sprite.transform.localRotation = Quaternion.Euler(0, 0, 90f);
-            isSliding = true;
-        }
-
-        //While sliding
-        if (isSliding)
-        {
-            slideStartTimer = slideStartTimer - Time.deltaTime;
-
-            velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction * 3, Time.deltaTime * acceleration / 2);
-
-            if (!isSqueezedLying)
+            //Initiate slide
+            if (Input.GetButtonDown("R2") && isCloseToGround && !isSliding && !isGrabbed)
             {
-                LayDownColliders();
-            }
-            else
-            {
-                BunchUpColliders();
-            }
-
-            if (frontInput.isColliding && slideStartTimer <= 0)
-            {
-                isSliding = false;
-                velocity.x = 0;
-                slideStartTimer = 0.1f;
-            }
-        }
-        else if(!isSqueezedUpright && !isColliderUpright)
-        {
-            sprite.transform.localRotation = Quaternion.Euler(0, 0, 0);
-            RaiseUpColliders();
-        }
-
-        //Teleport
-        if (!isSliding && Input.GetButton("L1"))
-        {
-            for (int distance = 0; distance / 10f <= maxTeleportDistance; distance++)
-            {
-                isSqueezedTeleport = Physics2D.OverlapBox(new Vector2(transform.position.x + distance * 0.1f * direction, transform.position.y + bc.size.y / 2 - bc.size.x / 2), new Vector2(bc.size.x - 0.1f, bc.size.y - 0.1f), 0f, whatIsPlatform);
-                if (!isSqueezedTeleport)
+                if (!isSqueezedLying)
                 {
-                    teleportDistance = distance * 0.1f;
+                    LayDownColliders();
+                }
+                else
+                {
+                    BunchUpColliders();
+                }
+
+                sprite.transform.localRotation = Quaternion.Euler(0, 0, 90f);
+                isSliding = true;
+            }
+
+            //While sliding
+            if (isSliding)
+            {
+                slideStartTimer = slideStartTimer - Time.deltaTime;
+
+                velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction * 3, Time.deltaTime * acceleration / 2);
+
+                if (!isSqueezedLying)
+                {
+                    LayDownColliders();
+                }
+                else
+                {
+                    BunchUpColliders();
+                }
+
+                if (frontInput.isColliding && slideStartTimer <= 0)
+                {
+                    isSliding = false;
+                    velocity.x = 0;
+                    slideStartTimer = 0.1f;
                 }
             }
+            else if (!isSqueezedUpright && !isColliderUpright)
+            {
+                sprite.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                RaiseUpColliders();
+            }
+
+            //Teleport
+            if (!isSliding && Input.GetButton("L1") && !hasTeleported)
+            {
+                for (int distance = 0; distance / 10f <= maxTeleportDistance; distance++)
+                {
+                    isSqueezedTeleport = Physics2D.OverlapBox(new Vector2(transform.position.x + distance * 0.1f * direction, transform.position.y + bc.size.y / 2 - bc.size.x / 2), new Vector2(bc.size.x - 0.1f, bc.size.y - 0.1f), 0f, whatIsPlatform | whatIsDamage);
+                    if (!isSqueezedTeleport)
+                    {
+                        teleportDistance = distance * 0.1f;
+                    }
+                }
+            }
+
+            if (!isSliding && Input.GetButtonUp("L1") && !hasTeleported)
+            {
+                isGrabbed = false;
+                velocity.y = 0;
+                velocity.x = 0;
+                transform.position = new Vector3(transform.position.x + direction * teleportDistance, transform.position.y, transform.position.z);
+                hasTeleported = true;
+            }
+        }
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("1 Damage") && !isInvincible)
+        {
+            currentHealth -= 1;
+            healthText.text = "Health: " + currentHealth;
+            isInvincible = true;
+            velocity = Vector2.zero;
+            Time.timeScale = 0f;
+            StartCoroutine(ResetAfterDamage());
         }
 
-        if (!isSliding && Input.GetButtonUp("L1"))
+        if (collision.gameObject.CompareTag("Minor Checkpoint") && lastCheckPoint != collision.gameObject.transform)
         {
-            isGrabbed = false;
-            velocity.y = 0;
-            velocity.x = 0;
-            transform.position = new Vector3(transform.position.x + direction * teleportDistance, transform.position.y, transform.position.z);
+            lastCheckPoint = collision.gameObject.transform;
+        }
+
+        if (collision.gameObject.CompareTag("1 Mana") && currentMana < maxMana && !hasBeenPickedUp.Contains(collision.gameObject))
+        {
+            currentMana += 1;
+            manaText.text = "Mana: " + currentMana;
+            hasBeenPickedUp.Add(collision.gameObject);
+            collision.gameObject.SetActive(false);
         }
     }
 
@@ -269,6 +352,62 @@ public class PlayerController : GroundedCharacterController
             isColliderUpright = true;
             isColliderLying = false;
             isColliderBunched = false;
+        }
+    }
+
+
+    public bool GetIsSliding()
+    {
+        return isSliding;
+    }
+
+
+    public float GetDirection()
+    {
+        return direction;
+    }
+
+
+    private void ResetToLastCheckpoint()
+    {
+        isSliding = false;
+        isGrabbed = false;
+        isInvincible = false;
+        transform.position = lastCheckPoint.position;
+        direction = Mathf.Sign(Input.GetAxis("Horizontal"));
+        transform.localScale = new Vector3(direction, 1, 1);
+        camController.SnapToPlayer();
+    }
+
+
+    private IEnumerator ResetAfterDamage()
+    {
+        float duration = 0.3f;
+        float smoothness = 20f;
+        float delay = 0.5f;
+        float timeStep = 0;
+        while (timeStep < duration + delay)
+        {
+            timeStep += duration / smoothness;
+            damageScreen.color = Color.Lerp(Color.clear, Color.black, timeStep / duration);
+            yield return Utilities.WaitForUnscaledSeconds(duration / smoothness);
+        }
+        ResetToLastCheckpoint();
+        Time.timeScale = 1f;
+        StartCoroutine(BlackToClear());
+    }
+
+
+    private IEnumerator BlackToClear()
+    {
+        float duration = 0.3f;
+        float smoothness = 20f;
+        float timeStep = 0;
+        while (timeStep < duration)
+        {
+            timeStep += duration / smoothness;
+            damageScreen.color = Color.Lerp(Color.black, Color.clear, timeStep / duration);
+            yield return Utilities.WaitForUnscaledSeconds(duration / smoothness);
         }
     }
 }

@@ -64,14 +64,17 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\CameraMoveWASD.cs" />
+    <Compile Include="Assets\Scripts\DecoyController.cs" />
     <Compile Include="Assets\Scripts\EdgeInput.cs" />
-    <Compile Include="Assets\Scripts\GroundedCharacterController.cs" />
+    <Compile Include="Assets\Scripts\FallingObjectController.cs" />
     <Compile Include="Assets\Scripts\Old Rigidbody\EarthBlockController.cs" />
     <Compile Include="Assets\Scripts\Old Rigidbody\PlayerControllerOld.cs" />
     <Compile Include="Assets\Scripts\PlatformController.cs" />
     <Compile Include="Assets\Scripts\PlatformWaker.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Utilities.cs" />
+    <Compile Include="Assets\Scripts\WalkingEnemyController.cs" />
+    <Compile Include="Assets\SpawnDemon.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
