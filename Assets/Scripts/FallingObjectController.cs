@@ -136,10 +136,10 @@ public class FallingObjectController : MonoBehaviour
         newPointsVertical.Add(new Vector2(0, -(bc.size.y / 2 - 0.015f)));
         newPointsVertical.Add(new Vector2(0, bc.size.y / 2 - 0.015f));
 
-        aboveCollider.transform.localPosition = new Vector3(bc.offset.x, bc.size.y / 2, aboveCollider.transform.localPosition.z);
-        belowCollider.transform.localPosition = new Vector3(bc.offset.x, -bc.size.y / 2, aboveCollider.transform.localPosition.z);
-        frontCollider.transform.localPosition = new Vector3(bc.size.y / 2, 0, aboveCollider.transform.localPosition.z);
-        backCollider.transform.localPosition = new Vector3(bc.offset.x * 2 - bc.size.y / 2, 0, aboveCollider.transform.localPosition.z);
+        aboveCollider.transform.localPosition = new Vector3(0, bc.size.y / 2, aboveCollider.transform.localPosition.z);
+        belowCollider.transform.localPosition = new Vector3(0, -bc.size.y / 2, aboveCollider.transform.localPosition.z);
+        frontCollider.transform.localPosition = new Vector3(bc.size.x / 2, 0, aboveCollider.transform.localPosition.z);
+        backCollider.transform.localPosition = new Vector3(-bc.size.x / 2, 0, aboveCollider.transform.localPosition.z);
 
         aboveCollider.points = newPointsHorizontal.ToArray();
         belowCollider.points = newPointsHorizontal.ToArray();
@@ -158,10 +158,10 @@ public class FallingObjectController : MonoBehaviour
         newPointsVertical.Add(new Vector2(0, -(bc.size.y / 2 - 0.015f)));
         newPointsVertical.Add(new Vector2(0, bc.size.y / 2 - 0.015f));
 
-        aboveCollider.transform.localPosition = new Vector3(0, bc.offset.y + bc.size.y / 2, aboveCollider.transform.localPosition.z);
-        belowCollider.transform.localPosition = new Vector3(0, bc.offset.y - bc.size.y / 2, aboveCollider.transform.localPosition.z);
-        frontCollider.transform.localPosition = new Vector3(bc.size.x / 2, bc.offset.y, aboveCollider.transform.localPosition.z);
-        backCollider.transform.localPosition = new Vector3(-bc.size.x / 2, bc.offset.y, aboveCollider.transform.localPosition.z);
+        aboveCollider.transform.localPosition = new Vector3(0, bc.size.y / 2, aboveCollider.transform.localPosition.z);
+        belowCollider.transform.localPosition = new Vector3(0, -bc.size.y / 2, aboveCollider.transform.localPosition.z);
+        frontCollider.transform.localPosition = new Vector3(bc.size.x / 2, 0, aboveCollider.transform.localPosition.z);
+        backCollider.transform.localPosition = new Vector3(-bc.size.x / 2, 0, aboveCollider.transform.localPosition.z);
 
         aboveCollider.points = newPointsHorizontal.ToArray();
         belowCollider.points = newPointsHorizontal.ToArray();

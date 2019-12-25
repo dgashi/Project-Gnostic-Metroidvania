@@ -15,6 +15,7 @@ TagManager:
   - FrontCollider
   - BackCollider
   - Decoy
+  - Teleport Sprite
   layers:
   - Default
   - TransparentFX

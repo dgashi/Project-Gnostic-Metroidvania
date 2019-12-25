@@ -9,6 +9,11 @@ public class EdgeInput : MonoBehaviour
     public List<PlatformController> collidingPlatformControllers;
     public LayerMask whatIsPlatform;
 
+    private void OnDisable()
+    {
+        isColliding = false;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //If colliding object is in the "Ground" layer:

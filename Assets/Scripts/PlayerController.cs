@@ -20,7 +20,7 @@ public class PlayerController : FallingObjectController
     public float smallerDimension;
     public float biggerDimension;
 
-    public float slideStartTimer = 0.1f;
+    //public float slideStartTimer = 0.1f;
 
     public float groundCheckDistance;
     public float wallCheckDistance;
@@ -72,6 +72,9 @@ public class PlayerController : FallingObjectController
     public Transform defaultCheckPoint;
     public Transform lastCheckPoint;
     public GameObject sprite;
+    public GameObject teleportSprite;
+    public GameObject decoy;
+    private SpriteRenderer teleportSpriteRenderer;
     private Camera cam;
     private CameraController camController;
     public Image damageScreen;
@@ -82,15 +85,15 @@ public class PlayerController : FallingObjectController
     {
         base.Start();
 
-        bc.offset = new Vector2(0, bc.size.y / 2 - bc.size.x / 2);
-        UpdateEdgeCollidersUpright();
-
         isColliderLying = false;
 
         currentHealth = maxHealth;
 
         cam = Camera.main;
         camController = cam.GetComponent<CameraController>();
+
+        teleportSpriteRenderer = teleportSprite.GetComponent<SpriteRenderer>();
+        teleportSpriteRenderer.enabled = false;
 
         lastCheckPoint = defaultCheckPoint;
 
@@ -107,9 +110,7 @@ public class PlayerController : FallingObjectController
         {
             base.Update();
 
-            playerCenterOffset = -(biggerDimension - smallerDimension) / 2;
-
-            isCloseToGround = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - bc.size.x / 2), new Vector2(bc.size.x - checkInset * 2, groundCheckDistance * 2), 0f, whatIsPlatform);
+            isCloseToGround = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - bc.size.y / 2), new Vector2(bc.size.x - checkInset * 2, groundCheckDistance * 2), 0f, whatIsPlatform);
             if (isColliderLying)
             {
                 isCloseToWall = Physics2D.OverlapBox(new Vector2(transform.position.x + direction * bc.size.y / 2, transform.position.y), new Vector2(wallCheckDistance * 2, bc.size.y - checkInset * 2), 0f, whatIsPlatform);
@@ -121,11 +122,11 @@ public class PlayerController : FallingObjectController
 
             if (!isColliderLying)
             {
-                isSqueezedLying = Physics2D.OverlapBox(new Vector2(transform.position.x + direction * playerCenterOffset, transform.position.y), new Vector2(biggerDimension - 0.02f, smallerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
+                isSqueezedLying = Physics2D.OverlapBox(new Vector2(transform.position.x + (bc.size.y / 2 - bc.size.x / 2) * direction, transform.position.y - (bc.size.y/2 - bc.size.x/2)), new Vector2(biggerDimension - 0.02f, smallerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
             }
             else if (!isColliderUpright)
             {
-                isSqueezedUpright = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - playerCenterOffset), new Vector2(smallerDimension - 0.02f, biggerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
+                isSqueezedUpright = Physics2D.OverlapBox(new Vector2(transform.position.x + (bc.size.x / 2 - bc.size.y / 2) * direction, transform.position.y + (bc.size.x / 2 - bc.size.y / 2)), new Vector2(smallerDimension - 0.02f, biggerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
             }
 
             //Reset variables when grounded
@@ -236,7 +237,7 @@ public class PlayerController : FallingObjectController
             //While sliding
             if (isSliding)
             {
-                slideStartTimer = slideStartTimer - Time.deltaTime;
+                //slideStartTimer = slideStartTimer - Time.deltaTime;
 
                 velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction * 3, Time.deltaTime * acceleration / 2);
 
@@ -249,14 +250,14 @@ public class PlayerController : FallingObjectController
                     BunchUpColliders();
                 }
 
-                if (frontInput.isColliding && slideStartTimer <= 0)
+                if (frontInput.isColliding && !isSqueezedUpright /*&& slideStartTimer <= 0*/)
                 {
                     isSliding = false;
                     velocity.x = 0;
-                    slideStartTimer = 0.1f;
+                    //slideStartTimer = 0.1f;
                 }
             }
-            else if (!isSqueezedUpright && !isColliderUpright)
+            else if (!isColliderUpright)
             {
                 sprite.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 RaiseUpColliders();
@@ -273,15 +274,26 @@ public class PlayerController : FallingObjectController
                         teleportDistance = distance * 0.1f;
                     }
                 }
+                teleportSprite.transform.localPosition = new Vector3(teleportDistance, 0, 0);
+                teleportSpriteRenderer.enabled = true;
             }
 
             if (!isSliding && Input.GetButtonUp("L1") && !hasTeleported)
             {
+                teleportSpriteRenderer.enabled = false;
                 isGrabbed = false;
                 velocity.y = 0;
                 velocity.x = 0;
                 transform.position = new Vector3(transform.position.x + direction * teleportDistance, transform.position.y, transform.position.z);
                 hasTeleported = true;
+            }
+
+            //Spawn decoy
+            if (Input.GetButtonDown("L2"))
+            {
+                decoy.SetActive(false);
+                decoy.transform.position = new Vector3(transform.position.x - 0.6f * direction, transform.position.y, transform.position.z);
+                decoy.SetActive(true);
             }
         }
     }
@@ -319,7 +331,7 @@ public class PlayerController : FallingObjectController
         if (!isColliderLying)
         {
             bc.size = new Vector2(biggerDimension, smallerDimension);
-            bc.offset = new Vector2(-(bc.size.x / 2 - bc.size.y / 2), 0);
+            transform.position -= new Vector3((bc.size.x / 2 - bc.size.y / 2) * -direction, bc.size.x / 2 - bc.size.y / 2, 0);
             UpdateEdgeCollidersLying();
             isColliderUpright = false;
             isColliderLying = true;
@@ -333,7 +345,6 @@ public class PlayerController : FallingObjectController
         if (!isColliderBunched)
         {
             bc.size = new Vector2(smallerDimension, smallerDimension);
-            bc.offset = new Vector2(0, 0);
             UpdateEdgeCollidersLying();
             isColliderUpright = false;
             isColliderLying = false;
@@ -346,8 +357,8 @@ public class PlayerController : FallingObjectController
     {
         if (!isColliderUpright)
         {
+            transform.position += new Vector3((bc.size.x / 2 - bc.size.y / 2) * direction, bc.size.x / 2 - bc.size.y / 2, 0);
             bc.size = new Vector2(smallerDimension, biggerDimension);
-            bc.offset = new Vector2(0, bc.size.y / 2 - bc.size.x / 2);
             UpdateEdgeCollidersUpright();
             isColliderUpright = true;
             isColliderLying = false;

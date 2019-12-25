@@ -7,11 +7,15 @@ public class WalkingEnemyController : FallingObjectController
     public float moveSpeed;
     public float acceleration;
     public float detectionDistance;
-    public int numberOfRays;
-    public LayerMask whatIsCharacters;
     private float direction;
-    [SerializeField]
-    private bool targetAvailable;
+
+    public LayerMask whatIsCharacters;
+    public Vector2 eyePosition;
+    public float eyeAngle;
+    public float fieldOfView;
+    public HashSet<Transform> possibleTargets;
+    public HashSet<Transform> seenTargets;
+    public HashSet<Transform> toBeRemovedFromSeenTargets;
 
     [SerializeField]
     private Transform target;
@@ -21,6 +25,14 @@ public class WalkingEnemyController : FallingObjectController
     {
         base.Start();
         sr = GetComponent<SpriteRenderer>();
+        possibleTargets = new HashSet<Transform>();
+        seenTargets = new HashSet<Transform>();
+        toBeRemovedFromSeenTargets = new HashSet<Transform>();
+        possibleTargets.Add(GameObject.FindGameObjectsWithTag("Player")[0].transform);
+        if (GameObject.FindGameObjectsWithTag("Decoy").Length != 0)
+        {
+            possibleTargets.Add(GameObject.FindGameObjectsWithTag("Decoy")[0].transform);
+        }
     }
 
     public override void Update()
@@ -60,49 +72,106 @@ public class WalkingEnemyController : FallingObjectController
             }
 
             //Find targets
-            for (int i = 0; i < numberOfRays; i++)
+            Vector2 localEyePosition = new Vector2(transform.position.x, transform.position.y) + new Vector2(eyePosition.x, eyePosition.y);
+            float eyeAngleInRadians = Mathf.Deg2Rad * eyeAngle;
+            Vector2 eyeAngleVector = new Vector2(Mathf.Cos(eyeAngleInRadians), Mathf.Sin(eyeAngleInRadians));
+
+            foreach (Transform i in possibleTargets)
             {
-                float angle = Mathf.Deg2Rad * (360f / numberOfRays) * i;
-                Vector2 angleVector = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                Vector2 directionToTarget = (new Vector2(i.position.x, i.position.y) - localEyePosition).normalized;
 
-                RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, angleVector, detectionDistance, whatIsPlatform | whatIsCharacters);
-
-                if (hitInfo.collider == null)
+                if (Utilities.DistanceBetweenVectorsSquared(localEyePosition, new Vector2(i.position.x, i.position.y)) <= Mathf.Pow(detectionDistance, 2))
                 {
-                    Debug.DrawLine(transform.position, new Vector2(transform.position.x + angleVector.x * detectionDistance, transform.position.y + angleVector.y * detectionDistance), Color.blue, .0001f);
-                }
-                else
-                {
-                    if (hitInfo.collider.CompareTag("Decoy"))
+                    if (Vector2.Angle(eyeAngleVector, directionToTarget) <= fieldOfView * 0.5f)
                     {
-                        target = hitInfo.collider.gameObject.transform;
-                    }
-                    else if (target == null && hitInfo.collider.gameObject.CompareTag("Player"))
-                    {
-                        target = hitInfo.collider.gameObject.transform;
-                    }
+                        //RaycastHit2D hitInfo = Physics2D.Raycast(localEyePosition, new Vector2(i.position.x, i.position.y) - localEyePosition, detectionDistance, whatIsCharacters | whatIsPlatform);
+                        RaycastHit2D hitInfo = Physics2D.Linecast(localEyePosition, new Vector2(i.position.x, i.position.y), whatIsCharacters | whatIsPlatform);
 
-                    Debug.DrawLine(transform.position, new Vector2(transform.position.x + angleVector.x * hitInfo.distance, transform.position.y + angleVector.y * hitInfo.distance), Color.blue, .0001f);
+                        if (hitInfo && hitInfo.collider.transform == i)
+                        {
+                            if (!seenTargets.Contains(i))
+                            {
+                                seenTargets.Add(i);
+                                Debug.Log(hitInfo.collider.gameObject.name + " is visible");
+                            }
+                            Debug.DrawLine(localEyePosition, i.position, Color.blue, .0001f);
+                        }
+                        else if (seenTargets.Contains(i))
+                        {
+                            seenTargets.Remove(i);
+                            Debug.Log(i.name + " is hidden behind something");
+                        }
+                    }
+                    else if (seenTargets.Contains(i))
+                    {
+                        seenTargets.Remove(i);
+                        Debug.Log(i.name + " is outside field of view");
+                    }
                 }
+                else if (seenTargets.Contains(i))
+                {
+                    seenTargets.Remove(i);
+                    Debug.Log(i.name + " is out of range");
+                }
+            }
+
+            //Draw borders and center of field of view for debugging
+            Vector2 localEyeAngleVector = new Vector2(Mathf.Cos(eyeAngleInRadians) * detectionDistance + localEyePosition.x, Mathf.Sin(eyeAngleInRadians) * detectionDistance + localEyePosition.y);
+
+            Debug.DrawLine(localEyePosition, localEyeAngleVector, Color.red, .0001f);
+
+            for (int i = -1; i < 2; i = i + 2)
+            {
+                float debugLineAngle = Mathf.Deg2Rad * (eyeAngle + fieldOfView * 0.5f * i);
+                Vector2 debugLineAngleVector = new Vector3(Mathf.Cos(debugLineAngle), Mathf.Sin(debugLineAngle));
+                Debug.DrawLine(localEyePosition, localEyePosition + debugLineAngleVector * detectionDistance, Color.blue, .0001f);
+            }
+
+            //Choose target from seenTargets and mark non-active ones to be removed
+            foreach (Transform i in seenTargets)
+            {
+                if (!i.gameObject.activeInHierarchy)
+                {
+                    toBeRemovedFromSeenTargets.Add(i);
+                }
+
+                if (i.gameObject.CompareTag("Decoy") && (target == null || !target.CompareTag("Decoy")))
+                {
+                    target = i;
+                }
+                else if (i.gameObject.CompareTag("Player") && (target == null || !target.CompareTag("Decoy") && !target.CompareTag("Player")))
+                {
+                    target = i;
+                }
+            }
+
+            //Remove non-active targets
+            foreach (Transform i in toBeRemovedFromSeenTargets)
+            {
+                Debug.Log(i.name + " was removed");
+                seenTargets.Remove(i);
+            }
+
+            toBeRemovedFromSeenTargets.Clear();
+
+            //If no targets have been seen, set target to null
+            if (seenTargets.Count == 0)
+            {
+                target = null;
             }
 
             //Move towards target
             if (target == null)
             {
-                sr.color = Color.white;
+                //sr.color = Color.white;
                 velocity.x = Mathf.Lerp(velocity.x, 0, Time.deltaTime * acceleration);
             }
             else
             {
-                sr.color = Color.red;
+                //sr.color = Color.red;
                 Vector2 distanceToTarget = target.position - transform.position;
                 direction = Mathf.Sign(distanceToTarget.x);
                 velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction, Time.deltaTime * acceleration);
-
-                if (Utilities.DistanceBetweenVectorsSquared(transform.position, target.position) > Mathf.Pow(detectionDistance, 2))
-                {
-                    target = null;
-                }
             }
         }
     }

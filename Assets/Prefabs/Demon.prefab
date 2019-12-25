@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4102316465417608388}
   m_LocalRotation: {x: -0, y: -0, z: 0.00000038596858, w: 1}
-  m_LocalPosition: {x: -1.0249996, y: 0.3, z: 0}
+  m_LocalPosition: {x: -1.0249996, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4102316465606034189}
@@ -169,10 +169,10 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.3}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.46, y: 0.35}
+    pivot: {x: 0.46, y: 0.5}
     oldSize: {x: 2.9609375, y: 1.640625}
     newSize: {x: 2.9609375, y: 1.6328125}
     adaptiveTilingThreshold: 0.5
@@ -213,14 +213,15 @@ MonoBehaviour:
   isTouchingGround: 0
   isTouchingCeiling: 0
   isTouchingWallInFront: 0
-  moveSpeed: 5
-  acceleration: 15
-  detectionDistance: 7
-  numberOfRays: 50
+  moveSpeed: 3
+  acceleration: 10
+  detectionDistance: 11
   whatIsCharacters:
     serializedVersion: 2
     m_Bits: 512
-  targetAvailable: 0
+  eyePosition: {x: 0, y: -0.55}
+  eyeAngle: 90
+  fieldOfView: 181
   target: {fileID: 0}
 --- !u!50 &4102316465606034176
 Rigidbody2D:
@@ -269,7 +270,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4102316465806429751}
   m_LocalRotation: {x: -0, y: -0, z: 0.00000020962916, w: 1}
-  m_LocalPosition: {x: 0, y: -0.25, z: 0}
+  m_LocalPosition: {x: 0, y: -0.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4102316465606034189}
@@ -288,9 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isColliding: 0
-  collidingObjects:
-  - {fileID: 0}
-  - {fileID: 0}
+  collidingObjects: []
   collidingPlatformControllers: []
   whatIsPlatform:
     serializedVersion: 2
@@ -339,7 +338,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4102316465827694648}
   m_LocalRotation: {x: -0, y: -0, z: 0.00000020962916, w: 1}
-  m_LocalPosition: {x: 0, y: 0.85, z: 0}
+  m_LocalPosition: {x: 0, y: 0.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4102316465606034189}
@@ -407,7 +406,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4102316467061598938}
   m_LocalRotation: {x: -0, y: -0, z: 0.00000038596858, w: 1}
-  m_LocalPosition: {x: 1.0249996, y: 0.3, z: 0}
+  m_LocalPosition: {x: 1.0249996, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4102316465606034189}

@@ -26,4 +26,9 @@ public class DecoyController : FallingObjectController
             gameObject.SetActive(false);
         }
     }
+
+    private void OnDisable()
+    {
+        velocity = new Vector2(0, 0);
+    }
 }
