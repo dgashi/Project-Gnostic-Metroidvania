@@ -16,6 +16,8 @@ TagManager:
   - BackCollider
   - Decoy
   - Teleport Sprite
+  - Environmental Damage 1
+  - Demon Damage 1
   layers:
   - Default
   - TransparentFX

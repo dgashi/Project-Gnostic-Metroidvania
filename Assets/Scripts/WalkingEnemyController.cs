@@ -9,6 +9,8 @@ public class WalkingEnemyController : FallingObjectController
     public float detectionDistance;
     private float direction;
 
+    public bool isInvincible = false;
+
     public LayerMask whatIsCharacters;
     public Vector2 eyePosition;
     public float eyeAngle;
@@ -21,18 +23,24 @@ public class WalkingEnemyController : FallingObjectController
     private Transform target;
     SpriteRenderer sr;
 
-    public override void Start()
+    private void Awake()
     {
-        base.Start();
-        sr = GetComponent<SpriteRenderer>();
         possibleTargets = new HashSet<Transform>();
-        seenTargets = new HashSet<Transform>();
-        toBeRemovedFromSeenTargets = new HashSet<Transform>();
+
         possibleTargets.Add(GameObject.FindGameObjectsWithTag("Player")[0].transform);
+
         if (GameObject.FindGameObjectsWithTag("Decoy").Length != 0)
         {
             possibleTargets.Add(GameObject.FindGameObjectsWithTag("Decoy")[0].transform);
         }
+    }
+
+    public override void Start()
+    {
+        base.Start();
+        sr = GetComponent<SpriteRenderer>();
+        seenTargets = new HashSet<Transform>();
+        toBeRemovedFromSeenTargets = new HashSet<Transform>();
     }
 
     public override void Update()
@@ -173,6 +181,14 @@ public class WalkingEnemyController : FallingObjectController
                 direction = Mathf.Sign(distanceToTarget.x);
                 velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction, Time.deltaTime * acceleration);
             }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Environmental Damage 1") && !isInvincible)
+        {
+            gameObject.SetActive(false);
         }
     }
 }

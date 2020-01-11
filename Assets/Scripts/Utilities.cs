@@ -38,4 +38,18 @@ public class Utilities
     {
         return Mathf.Pow((vectorA.x - vectorB.x), 2) + Mathf.Pow((vectorA.y - vectorB.y), 2);
     }
+
+
+    public static bool IsTagInList(GameObject gameObject, string[] listOfTags)
+    {
+        foreach (string i in listOfTags)
+        {
+            if (gameObject.CompareTag(i))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

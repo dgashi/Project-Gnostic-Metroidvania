@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1290097373175118556}
   m_Layer: 11
   m_Name: Spikes
-  m_TagString: 1 Damage
+  m_TagString: Environmental Damage 1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

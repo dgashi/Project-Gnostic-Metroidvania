@@ -75,20 +75,26 @@ public class FallingObjectController : MonoBehaviour
         isTouchingWallInFront = frontInput.isColliding;
 
         //Attach to moving platform below
-        if (belowInput.collidingPlatformControllers.Count != 0)
+        if (!rb.isKinematic)
         {
-            platformBelowController = belowInput.collidingPlatformControllers[belowInput.collidingPlatformControllers.Count - 1];
+            if (belowInput.collidingPlatformControllers.Count != 0)
+            {
+                if (!belowInput.collidingPlatformControllers.Contains(platformBelowController))
+                {
+                    platformBelowController = belowInput.collidingPlatformControllers[belowInput.collidingPlatformControllers.Count - 1];
 
-            Debug.Log(platformBelowController.gameObject.name);
-        }
-        else
-        {
-            platformBelowController = null;
-        }
+                    Debug.Log(platformBelowController.gameObject.name);
+                }
+            }
+            else
+            {
+                platformBelowController = null;
+            }
 
-        if (belowInput.isColliding && platformBelowController != null)
-        {
-            platformBelowController.AddPassengerRB(rb);
+            if (belowInput.isColliding && platformBelowController != null)
+            {
+                platformBelowController.AddPassengerRB(rb);
+            }
         }
 
         //Apply gravity;

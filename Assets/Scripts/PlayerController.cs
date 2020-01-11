@@ -11,6 +11,7 @@ public class PlayerController : FallingObjectController
     public float jumpForce;
     public Vector2 wallJumpModifier;
     public LayerMask whatIsDamage;
+    public string[] listOfDamagingTags;
 
     public float maxTeleportDistance;
     [SerializeField]
@@ -20,7 +21,7 @@ public class PlayerController : FallingObjectController
     public float smallerDimension;
     public float biggerDimension;
 
-    //public float slideStartTimer = 0.1f;
+    public float squeezeTimer = 0.1f;
 
     public float groundCheckDistance;
     public float wallCheckDistance;
@@ -74,6 +75,7 @@ public class PlayerController : FallingObjectController
     public GameObject sprite;
     public GameObject teleportSprite;
     public GameObject decoy;
+    public GameObject block;
     private SpriteRenderer teleportSpriteRenderer;
     private Camera cam;
     private CameraController camController;
@@ -237,8 +239,6 @@ public class PlayerController : FallingObjectController
             //While sliding
             if (isSliding)
             {
-                //slideStartTimer = slideStartTimer - Time.deltaTime;
-
                 velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction * 3, Time.deltaTime * acceleration / 2);
 
                 if (!isSqueezedLying)
@@ -250,11 +250,10 @@ public class PlayerController : FallingObjectController
                     BunchUpColliders();
                 }
 
-                if (frontInput.isColliding && !isSqueezedUpright /*&& slideStartTimer <= 0*/)
+                if (frontInput.isColliding && !isSqueezedUpright)
                 {
                     isSliding = false;
                     velocity.x = 0;
-                    //slideStartTimer = 0.1f;
                 }
             }
             else if (!isColliderUpright)
@@ -266,26 +265,40 @@ public class PlayerController : FallingObjectController
             //Teleport
             if (!isSliding && Input.GetButton("L1") && !hasTeleported)
             {
-                for (int distance = 0; distance / 10f <= maxTeleportDistance; distance++)
+                for (float distance = 0; distance <= maxTeleportDistance; distance += 0.1f)
                 {
-                    isSqueezedTeleport = Physics2D.OverlapBox(new Vector2(transform.position.x + distance * 0.1f * direction, transform.position.y + bc.size.y / 2 - bc.size.x / 2), new Vector2(bc.size.x - 0.1f, bc.size.y - 0.1f), 0f, whatIsPlatform | whatIsDamage);
+                    isSqueezedTeleport = Physics2D.OverlapBox(new Vector2(transform.position.x + distance * direction, transform.position.y + bc.size.y / 2 - bc.size.x / 2), new Vector2(bc.size.x - 0.015f, bc.size.y - 0.015f), 0f, whatIsPlatform | whatIsDamage);
+
                     if (!isSqueezedTeleport)
                     {
-                        teleportDistance = distance * 0.1f;
+                        teleportDistance = distance;
                     }
                 }
+
                 teleportSprite.transform.localPosition = new Vector3(teleportDistance, 0, 0);
-                teleportSpriteRenderer.enabled = true;
+
+                if (teleportDistance > 0)
+                {
+                    teleportSpriteRenderer.enabled = true;
+                }
+                else
+                {
+                    teleportSpriteRenderer.enabled = false;
+                }
             }
 
             if (!isSliding && Input.GetButtonUp("L1") && !hasTeleported)
             {
                 teleportSpriteRenderer.enabled = false;
-                isGrabbed = false;
-                velocity.y = 0;
-                velocity.x = 0;
-                transform.position = new Vector3(transform.position.x + direction * teleportDistance, transform.position.y, transform.position.z);
-                hasTeleported = true;
+
+                if (teleportDistance > 0)
+                {
+                    isGrabbed = false;
+                    velocity.y = 0;
+                    velocity.x = 0;
+                    transform.position = new Vector3(transform.position.x + direction * teleportDistance, transform.position.y, transform.position.z);
+                    hasTeleported = true;
+                }
             }
 
             //Spawn decoy
@@ -295,13 +308,34 @@ public class PlayerController : FallingObjectController
                 decoy.transform.position = new Vector3(transform.position.x - 0.6f * direction, transform.position.y, transform.position.z);
                 decoy.SetActive(true);
             }
+
+            //Spawn stone block
+            if (Input.GetButtonDown("R1") && Input.GetAxis("Vertical") < 0)
+            {
+                block.SetActive(false);
+                block.transform.position = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
+                block.SetActive(true);
+            }
+
+            if (((aboveInput.isColliding && belowInput.isColliding) || (frontInput.isColliding && backInput.isColliding)) && !isInvincible)
+            {
+                squeezeTimer -= Time.deltaTime;
+
+                if (squeezeTimer <= 0)
+                {
+                    Debug.Log("Player was squeezed");
+                }
+            }
+            else
+            {
+                squeezeTimer = 0.1f;
+            }
         }
     }
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("1 Damage") && !isInvincible)
+        if (Utilities.IsTagInList(collision.gameObject, listOfDamagingTags) && !isInvincible)
         {
             currentHealth -= 1;
             healthText.text = "Health: " + currentHealth;
@@ -383,11 +417,12 @@ public class PlayerController : FallingObjectController
     {
         isSliding = false;
         isGrabbed = false;
-        isInvincible = false;
+        teleportSpriteRenderer.enabled = false;
         transform.position = lastCheckPoint.position;
         direction = Mathf.Sign(Input.GetAxis("Horizontal"));
         transform.localScale = new Vector3(direction, 1, 1);
         camController.SnapToPlayer();
+        isInvincible = false;
     }
 
 
