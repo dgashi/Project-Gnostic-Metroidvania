@@ -62,16 +62,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Abstract classes\Damagable.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\CameraMoveWASD.cs" />
     <Compile Include="Assets\Scripts\DecoyController.cs" />
     <Compile Include="Assets\Scripts\EdgeInput.cs" />
     <Compile Include="Assets\Scripts\FallingObjectController.cs" />
+    <Compile Include="Assets\Scripts\General\ContactDamager.cs" />
+    <Compile Include="Assets\Scripts\General\Damage.cs" />
     <Compile Include="Assets\Scripts\Old Rigidbody\EarthBlockController.cs" />
     <Compile Include="Assets\Scripts\Old Rigidbody\PlayerControllerOld.cs" />
     <Compile Include="Assets\Scripts\PlatformController.cs" />
     <Compile Include="Assets\Scripts\PlatformWaker.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerCheckpoint.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerMana.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerSpawnBlock.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerSpawnDecoy.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerStates.cs" />
     <Compile Include="Assets\Scripts\SpawnedBlockController.cs" />
     <Compile Include="Assets\Scripts\Utilities.cs" />
     <Compile Include="Assets\Scripts\WalkingEnemyController.cs" />
