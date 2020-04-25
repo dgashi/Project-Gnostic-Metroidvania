@@ -131,6 +131,9 @@ MonoBehaviour:
   whatIsPlatform:
     serializedVersion: 2
     m_Bits: 256
+  colliderPosition: 3
+  parentrb: {fileID: 0}
+  parentStates: {fileID: 0}
 --- !u!68 &5219122875904294347
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -199,6 +202,9 @@ MonoBehaviour:
   whatIsPlatform:
     serializedVersion: 2
     m_Bits: 256
+  colliderPosition: 0
+  parentrb: {fileID: 0}
+  parentStates: {fileID: 0}
 --- !u!68 &5219122875921895132
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -227,7 +233,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5219122875965314194}
   - component: {fileID: 7626645197155465245}
-  - component: {fileID: 5219122875965314195}
   - component: {fileID: 5219122875965314193}
   - component: {fileID: 5219122875965314196}
   - component: {fileID: 2601845788443496851}
@@ -237,6 +242,8 @@ GameObject:
   - component: {fileID: 6382195298311741220}
   - component: {fileID: 3627291368650243836}
   - component: {fileID: 8662664182306619657}
+  - component: {fileID: 2947648855210715494}
+  - component: {fileID: 5219122875965314195}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -276,73 +283,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c5c562ce343ad44b8918f195d3c2722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  direction: 1
+  isSqueezedUpright: 0
+  isSqueezedLying: 0
   isColliderLying: 0
   isColliderUpright: 0
   isColliderBunched: 0
+  isInvincible: 0
+  isTouchingGround: 0
+  isTouchingCeiling: 0
+  isTouchingWallInFront: 0
+  isTouchingWallBehind: 0
+  isAffectedByGravity: 1
+  whatIsDamage:
+    serializedVersion: 2
+    m_Bits: 2048
+  whatIsPlatform:
+    serializedVersion: 2
+    m_Bits: 256
   isGrabbed: 0
   isSliding: 0
   isCloseToGround: 0
   isCloseToWall: 0
-  isSqueezedUpright: 0
-  isSqueezedLying: 0
   isSqueezedTeleport: 0
   hasAirJumped: 0
   hasTeleported: 0
   dontStopX: 0
   dontMoveX: 0
   isPreparingTeleport: 0
-  isInvincible: 0
-  direction: 1
---- !u!114 &5219122875965314195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5219122875965314192}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b3577a7d1d14c8468ec8e4de3373770, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gravity: 20
-  whatIsPlatform:
-    serializedVersion: 2
-    m_Bits: 256
-  aboveColliderObject: {fileID: 5219122875921895130}
-  aboveInput: {fileID: 0}
-  belowColliderObject: {fileID: 5219122877931697311}
-  belowInput: {fileID: 0}
-  frontColliderObject: {fileID: 5219122876149772580}
-  frontInput: {fileID: 0}
-  backColliderObject: {fileID: 5219122875904294345}
-  backInput: {fileID: 0}
-  velocity: {x: 0, y: 0}
-  rb: {fileID: 0}
-  bc: {fileID: 0}
-  platformBelowController: {fileID: 0}
-  isTouchingGround: 0
-  isTouchingCeiling: 0
-  isTouchingWallInFront: 0
-  disableAirJump: 0
-  moveSpeed: 7
-  acceleration: 15
-  jumpForce: 12
-  wallJumpModifier: {x: 1, y: 1}
-  whatIsDamage:
-    serializedVersion: 2
-    m_Bits: 2048
-  maxTeleportDistance: 2
-  teleportDistance: 0
-  playerCenterOffset: 0
-  smallerDimension: 0.5
-  biggerDimension: 1.2
-  squeezeTimer: 0.1
   groundCheckDistance: 0.2
   wallCheckDistance: 0.2
   checkInset: 0.01
-  sprite: {fileID: 5219122876833608075}
-  teleportSprite: {fileID: 632436737}
 --- !u!50 &5219122875965314193
 Rigidbody2D:
   serializedVersion: 4
@@ -490,13 +461,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxTeleportDistance: 2
   teleportDistance: 0
+  teleportSprite: {fileID: 632436737}
+  teleportSpriteRenderer: {fileID: 0}
+--- !u!114 &2947648855210715494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5219122875965314192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98c8b2c8eb5c0e94b8584993235971f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0}
+  moveSpeed: 7
+  acceleration: 15
+  gravity: 20
+--- !u!114 &5219122875965314195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5219122875965314192}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b3577a7d1d14c8468ec8e4de3373770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 20
   whatIsPlatform:
     serializedVersion: 2
     m_Bits: 256
-  whatIsDamage:
-    serializedVersion: 2
-    m_Bits: 2048
-  teleportSprite: {fileID: 632436737}
+  aboveColliderObject: {fileID: 5219122875921895130}
+  aboveInput: {fileID: 0}
+  belowColliderObject: {fileID: 5219122877931697311}
+  belowInput: {fileID: 0}
+  frontColliderObject: {fileID: 5219122876149772580}
+  frontInput: {fileID: 0}
+  backColliderObject: {fileID: 5219122875904294345}
+  backInput: {fileID: 0}
+  velocity: {x: 0, y: 0}
+  rb: {fileID: 0}
+  bc: {fileID: 0}
+  platformBelowController: {fileID: 0}
+  isTouchingGround: 0
+  isTouchingCeiling: 0
+  isTouchingWallInFront: 0
+  disableAirJump: 0
+  moveSpeed: 7
+  acceleration: 15
+  jumpForce: 12
+  wallJumpModifier: {x: 1, y: 1}
+  playerCenterOffset: 0
+  smallerDimension: 0.5
+  biggerDimension: 1.2
+  squeezeTimer: 0.1
+  groundCheckDistance: 0.2
+  wallCheckDistance: 0.2
+  checkInset: 0.01
+  sprite: {fileID: 5219122876833608075}
 --- !u!1 &5219122876149772580
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,6 +573,9 @@ MonoBehaviour:
   whatIsPlatform:
     serializedVersion: 2
     m_Bits: 256
+  colliderPosition: 2
+  parentrb: {fileID: 0}
+  parentStates: {fileID: 0}
 --- !u!68 &5219122876149772582
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -696,6 +725,9 @@ MonoBehaviour:
   whatIsPlatform:
     serializedVersion: 2
     m_Bits: 256
+  colliderPosition: 1
+  parentrb: {fileID: 0}
+  parentStates: {fileID: 0}
 --- !u!68 &5219122877931697298
 EdgeCollider2D:
   m_ObjectHideFlags: 0

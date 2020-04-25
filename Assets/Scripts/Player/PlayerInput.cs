@@ -8,6 +8,7 @@ public class PlayerInput : MonoBehaviour
     PlayerSpawnDecoy spawnDecoy;
     PlayerSpawnBlock spawnBlock;
     PlayerTeleport teleport;
+    Movement movement;
 
     public Vector2 playerInput;
 
@@ -17,25 +18,16 @@ public class PlayerInput : MonoBehaviour
         spawnDecoy = GetComponent<PlayerSpawnDecoy>();
         spawnBlock = GetComponent<PlayerSpawnBlock>();
         teleport = GetComponent<PlayerTeleport>();
+        movement = GetComponent<Movement>();
     }
 
     void Update()
     {
         if (Time.timeScale != 0)
         {
-            playerInput.x = Input.GetAxis("Horizontal");
-            playerInput.y = Input.GetAxis("Vertical");
-
             if (!states.isSliding && !states.isGrabbed)
             {
-                if (Input.GetAxis("Horizontal") != 0)
-                {
-                    //Try to move player right or left
-                }
-                else if (!states.dontStopX)
-                {
-                    //Try to stop player
-                }
+                movement.MoveX(Input.GetAxis("Horizontal"), true);
             }
             
             if (Input.GetButton("R1"))
@@ -45,7 +37,7 @@ public class PlayerInput : MonoBehaviour
             
             if (Input.GetButtonDown("X"))
             {
-                //Try to jump
+                movement.MoveY(1.7f, false);
             }
             
             if (Input.GetButtonDown("R2"))

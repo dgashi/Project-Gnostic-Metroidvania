@@ -14,6 +14,8 @@ public class PlayerHealth : Damagable
 
     PlayerStates states;
     PlayerCheckpoint checkpoint;
+    PlayerTeleport teleport;
+    Movement movement;
 
     Camera cam;
     CameraController camController;
@@ -22,6 +24,8 @@ public class PlayerHealth : Damagable
     {
         states = GetComponent<PlayerStates>();
         checkpoint = GetComponent<PlayerCheckpoint>();
+        teleport = GetComponent<PlayerTeleport>();
+        movement = GetComponent<Movement>();
 
         cam = Camera.main;
         camController = cam.GetComponent<CameraController>();
@@ -34,12 +38,18 @@ public class PlayerHealth : Damagable
     {
         if (type != Damage.DamageType.Healing && !states.isInvincible)
         {
-            currentHealth -= 1;
+            currentHealth -= amount;
             healthText.text = "Health: " + currentHealth;
             states.isInvincible = true;
-            //velocity = Vector2.zero;
+            movement.velocity = Vector2.zero;
             Time.timeScale = 0f;
             StartCoroutine(ResetAfterDamage());
+        }
+
+        if (type == Damage.DamageType.Healing)
+        {
+            currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+            healthText.text = "Health: " + currentHealth;
         }
     }
 
@@ -47,7 +57,7 @@ public class PlayerHealth : Damagable
     {
         states.isSliding = false;
         states.isGrabbed = false;
-        //teleportSpriteRenderer.enabled = false;
+        teleport.teleportSpriteRenderer.enabled = false;
         transform.position = checkpoint.lastCheckPoint.position;
         states.direction = Mathf.Sign(Input.GetAxis("Horizontal"));
         transform.localScale = new Vector3(states.direction, 1, 1);

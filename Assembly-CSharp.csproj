@@ -66,10 +66,14 @@
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\CameraMoveWASD.cs" />
     <Compile Include="Assets\Scripts\DecoyController.cs" />
-    <Compile Include="Assets\Scripts\EdgeInput.cs" />
     <Compile Include="Assets\Scripts\FallingObjectController.cs" />
+    <Compile Include="Assets\Scripts\General\ColliderManager.cs" />
     <Compile Include="Assets\Scripts\General\ContactDamager.cs" />
     <Compile Include="Assets\Scripts\General\Damage.cs" />
+    <Compile Include="Assets\Scripts\General\EdgeInput.cs" />
+    <Compile Include="Assets\Scripts\General\Movement.cs" />
+    <Compile Include="Assets\Scripts\General\SpaceChecker.cs" />
+    <Compile Include="Assets\Scripts\General\States.cs" />
     <Compile Include="Assets\Scripts\Old Rigidbody\EarthBlockController.cs" />
     <Compile Include="Assets\Scripts\Old Rigidbody\PlayerControllerOld.cs" />
     <Compile Include="Assets\Scripts\PlatformController.cs" />

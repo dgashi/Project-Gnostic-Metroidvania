@@ -10,7 +10,6 @@ public class PlayerController : FallingObjectController
     public float acceleration;
     public float jumpForce;
     public Vector2 wallJumpModifier;
-    public LayerMask whatIsDamage;
 
     public float playerCenterOffset;
     public float smallerDimension;
@@ -63,11 +62,11 @@ public class PlayerController : FallingObjectController
 
             if (!states.isColliderLying)
             {
-                states.isSqueezedLying = Physics2D.OverlapBox(new Vector2(transform.position.x + (bc.size.y / 2 - bc.size.x / 2) * states.direction, transform.position.y - (bc.size.y/2 - bc.size.x/2)), new Vector2(biggerDimension - 0.02f, smallerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
+                states.isSqueezedLying = Physics2D.OverlapBox(new Vector2(transform.position.x + (bc.size.y / 2 - bc.size.x / 2) * states.direction, transform.position.y - (bc.size.y/2 - bc.size.x/2)), new Vector2(biggerDimension - 0.02f, smallerDimension - 0.02f), 0f, whatIsPlatform | states.whatIsDamage);
             }
             else if (!states.isColliderUpright)
             {
-                states.isSqueezedUpright = Physics2D.OverlapBox(new Vector2(transform.position.x + (bc.size.x / 2 - bc.size.y / 2) * states.direction, transform.position.y + (bc.size.x / 2 - bc.size.y / 2)), new Vector2(smallerDimension - 0.02f, biggerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
+                states.isSqueezedUpright = Physics2D.OverlapBox(new Vector2(transform.position.x + (bc.size.x / 2 - bc.size.y / 2) * states.direction, transform.position.y + (bc.size.x / 2 - bc.size.y / 2)), new Vector2(smallerDimension - 0.02f, biggerDimension - 0.02f), 0f, whatIsPlatform | states.whatIsDamage);
             }
 
             //Reset variables when grounded

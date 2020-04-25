@@ -114,7 +114,7 @@ MonoBehaviour:
   m_MinSize: {x: 611, y: 472}
   m_MaxSize: {x: 18006, y: 14044}
   vertical: 0
-  controlID: 64
+  controlID: 87
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_MinSize: {x: 336, y: 472}
   m_MaxSize: {x: 14006, y: 14044}
   vertical: 1
-  controlID: 65
+  controlID: 88
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -164,7 +164,7 @@ MonoBehaviour:
   m_MinSize: {x: 304, y: 200}
   m_MaxSize: {x: 8004, y: 4022}
   vertical: 0
-  controlID: 66
+  controlID: 40
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -271,7 +271,7 @@ MonoBehaviour:
   - {fileID: 19}
   - {fileID: 20}
   m_Selected: 1
-  m_LastSelected: 0
+  m_LastSelected: 2
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -435,9 +435,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: e2260000
+      m_SelectedIDs: ce390000
       m_LastClickedID: 0
-      m_ExpandedIDs: 46f8ffffd2360000
+      m_ExpandedIDs: 48b4ffffbc560000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -497,9 +497,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -22.448172, y: 9.624304, z: -4.093601}
+    m_Target: {x: -23.773544, y: 8.136381, z: -11.164598}
     speed: 2
-    m_Value: {x: -22.448172, y: 9.624304, z: -4.093601}
+    m_Value: {x: -23.795376, y: 8.147499, z: -11.148042}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -532,9 +532,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 7.181468
+    m_Target: 4.3919187
     speed: 2
-    m_Value: 7.181468
+    m_Value: 4.598868
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -689,19 +689,19 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets/Scripts/General
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Scripts/General
   m_LastFoldersGridSize: 96
   m_LastProjectPath: C:\Users\Don-Oskar Gashi\Documents\GitHub\Project-Gnostic-Metroidvania
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: ca320000
-    m_LastClickedID: 13002
+    m_SelectedIDs: 00300000
+    m_LastClickedID: 12288
     m_ExpandedIDs: 00000000c22d0000ca32000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -813,7 +813,7 @@ MonoBehaviour:
     height: 320
   m_ViewDataDictionary: {fileID: 0}
   m_VertSplit:
-    ID: 409
+    ID: 10907
     splitterInitialOffset: 0
     currentActiveSplitter: -1
     realSizes: 9800000098000000
@@ -1148,7 +1148,7 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 14034
+  m_LastSelectedObjectID: 22204
 --- !u!114 &22
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1186,7 +1186,7 @@ MonoBehaviour:
     m_PrefName: Preview_InspectorPreview
   m_PreviewWindow: {fileID: 0}
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 1529
+  m_LastVerticalScrollValue: 0
 --- !u!114 &23
 MonoBehaviour:
   m_ObjectHideFlags: 52
