@@ -49,8 +49,8 @@ public class PlayerHealth : Damagable
         states.isGrabbed = false;
         //teleportSpriteRenderer.enabled = false;
         transform.position = checkpoint.lastCheckPoint.position;
-        //direction = Mathf.Sign(Input.GetAxis("Horizontal"));
-        //transform.localScale = new Vector3(direction, 1, 1);
+        states.direction = Mathf.Sign(Input.GetAxis("Horizontal"));
+        transform.localScale = new Vector3(states.direction, 1, 1);
         camController.SnapToPlayer();
         states.isInvincible = false;
     }

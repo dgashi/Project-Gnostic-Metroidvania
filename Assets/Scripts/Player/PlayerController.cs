@@ -12,10 +12,6 @@ public class PlayerController : FallingObjectController
     public Vector2 wallJumpModifier;
     public LayerMask whatIsDamage;
 
-    public float maxTeleportDistance;
-    [SerializeField]
-    private float teleportDistance;
-
     public float playerCenterOffset;
     public float smallerDimension;
     public float biggerDimension;
@@ -26,16 +22,12 @@ public class PlayerController : FallingObjectController
     public float wallCheckDistance;
     public float checkInset;
 
-    [SerializeField]
-    private float direction = 1;
 
     private PlatformController platformInFrontController;
 
     private PlayerStates states;
 
     public GameObject sprite;
-    public GameObject teleportSprite;
-    private SpriteRenderer teleportSpriteRenderer;
     private Camera cam;
     private CameraController camController;
 
@@ -49,9 +41,6 @@ public class PlayerController : FallingObjectController
         states = GetComponent<PlayerStates>();
 
         states.isColliderLying = false;
-
-        teleportSpriteRenderer = teleportSprite.GetComponent<SpriteRenderer>();
-        teleportSpriteRenderer.enabled = false;
     }
 
 
@@ -65,20 +54,20 @@ public class PlayerController : FallingObjectController
 
             if (states.isColliderLying)
             {
-                states.isCloseToWall = Physics2D.OverlapBox(new Vector2(transform.position.x + direction * bc.size.y / 2, transform.position.y), new Vector2(wallCheckDistance * 2, bc.size.y - checkInset * 2), 0f, whatIsPlatform);
+                states.isCloseToWall = Physics2D.OverlapBox(new Vector2(transform.position.x + states.direction * bc.size.y / 2, transform.position.y), new Vector2(wallCheckDistance * 2, bc.size.y - checkInset * 2), 0f, whatIsPlatform);
             }
             else
             {
-                states.isCloseToWall = Physics2D.OverlapBox(new Vector2(transform.position.x + direction * bc.size.x / 2, transform.position.y), new Vector2(wallCheckDistance * 2, bc.size.x - checkInset * 2), 0f, whatIsPlatform);
+                states.isCloseToWall = Physics2D.OverlapBox(new Vector2(transform.position.x + states.direction * bc.size.x / 2, transform.position.y), new Vector2(wallCheckDistance * 2, bc.size.x - checkInset * 2), 0f, whatIsPlatform);
             }
 
             if (!states.isColliderLying)
             {
-                states.isSqueezedLying = Physics2D.OverlapBox(new Vector2(transform.position.x + (bc.size.y / 2 - bc.size.x / 2) * direction, transform.position.y - (bc.size.y/2 - bc.size.x/2)), new Vector2(biggerDimension - 0.02f, smallerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
+                states.isSqueezedLying = Physics2D.OverlapBox(new Vector2(transform.position.x + (bc.size.y / 2 - bc.size.x / 2) * states.direction, transform.position.y - (bc.size.y/2 - bc.size.x/2)), new Vector2(biggerDimension - 0.02f, smallerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
             }
             else if (!states.isColliderUpright)
             {
-                states.isSqueezedUpright = Physics2D.OverlapBox(new Vector2(transform.position.x + (bc.size.x / 2 - bc.size.y / 2) * direction, transform.position.y + (bc.size.x / 2 - bc.size.y / 2)), new Vector2(smallerDimension - 0.02f, biggerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
+                states.isSqueezedUpright = Physics2D.OverlapBox(new Vector2(transform.position.x + (bc.size.x / 2 - bc.size.y / 2) * states.direction, transform.position.y + (bc.size.x / 2 - bc.size.y / 2)), new Vector2(smallerDimension - 0.02f, biggerDimension - 0.02f), 0f, whatIsPlatform | whatIsDamage);
             }
 
             //Reset variables when grounded
@@ -95,9 +84,9 @@ public class PlayerController : FallingObjectController
             {
                 if (Input.GetAxis("Horizontal") != 0 && !states.dontMoveX)
                 {
-                    direction = Mathf.Sign(Input.GetAxis("Horizontal"));
+                    states.direction = Mathf.Sign(Input.GetAxis("Horizontal"));
                     velocity.x = Mathf.Lerp(velocity.x, moveSpeed * Input.GetAxis("Horizontal"), Time.deltaTime * acceleration);
-                    transform.localScale = new Vector3(direction, 1, 1);
+                    transform.localScale = new Vector3(states.direction, 1, 1);
                 }
                 else if (!states.dontStopX)
                 {
@@ -133,7 +122,7 @@ public class PlayerController : FallingObjectController
                 }
                 else
                 {
-                    velocity.x = direction * 100;
+                    velocity.x = states.direction * 100;
                 }
 
                 if (Input.GetButtonUp("R1"))
@@ -156,9 +145,9 @@ public class PlayerController : FallingObjectController
             }
             else if (Input.GetButtonDown("X") && states.isGrabbed)
             {
-                direction = -direction;
-                transform.localScale = new Vector3(direction, 1, 1);
-                velocity = new Vector2(moveSpeed * direction, jumpForce) * wallJumpModifier;
+                states.direction = -states.direction;
+                transform.localScale = new Vector3(states.direction, 1, 1);
+                velocity = new Vector2(moveSpeed * states.direction, jumpForce) * wallJumpModifier;
                 states.dontStopX = true;
                 states.dontMoveX = true;
                 states.isGrabbed = false;
@@ -190,7 +179,7 @@ public class PlayerController : FallingObjectController
             //While sliding
             if (states.isSliding)
             {
-                velocity.x = Mathf.Lerp(velocity.x, moveSpeed * direction * 3, Time.deltaTime * acceleration / 2);
+                velocity.x = Mathf.Lerp(velocity.x, moveSpeed * states.direction * 3, Time.deltaTime * acceleration / 2);
 
                 if (!states.isSqueezedLying)
                 {
@@ -211,45 +200,6 @@ public class PlayerController : FallingObjectController
             {
                 sprite.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 RaiseUpColliders();
-            }
-
-            //Teleport
-            if (!states.isSliding && Input.GetButton("L1") && !states.hasTeleported)
-            {
-                for (float distance = 0; distance <= maxTeleportDistance; distance += 0.1f)
-                {
-                    states.isSqueezedTeleport = Physics2D.OverlapBox(new Vector2(transform.position.x + distance * direction, transform.position.y + bc.size.y / 2 - bc.size.x / 2), new Vector2(bc.size.x - 0.015f, bc.size.y - 0.015f), 0f, whatIsPlatform | whatIsDamage);
-
-                    if (!states.isSqueezedTeleport)
-                    {
-                        teleportDistance = distance;
-                    }
-                }
-
-                teleportSprite.transform.localPosition = new Vector3(teleportDistance, 0, 0);
-
-                if (teleportDistance > 0)
-                {
-                    teleportSpriteRenderer.enabled = true;
-                }
-                else
-                {
-                    teleportSpriteRenderer.enabled = false;
-                }
-            }
-
-            if (!states.isSliding && Input.GetButtonUp("L1") && !states.hasTeleported)
-            {
-                teleportSpriteRenderer.enabled = false;
-
-                if (teleportDistance > 0)
-                {
-                    states.isGrabbed = false;
-                    velocity.y = 0;
-                    velocity.x = 0;
-                    transform.position = new Vector3(transform.position.x + direction * teleportDistance, transform.position.y, transform.position.z);
-                    states.hasTeleported = true;
-                }
             }
 
             if (((aboveInput.isColliding && belowInput.isColliding) || (frontInput.isColliding && backInput.isColliding)) && !states.isInvincible)
@@ -274,7 +224,7 @@ public class PlayerController : FallingObjectController
         if (!states.isColliderLying)
         {
             bc.size = new Vector2(biggerDimension, smallerDimension);
-            transform.position -= new Vector3((bc.size.x / 2 - bc.size.y / 2) * -direction, bc.size.x / 2 - bc.size.y / 2, 0);
+            transform.position -= new Vector3((bc.size.x / 2 - bc.size.y / 2) * -states.direction, bc.size.x / 2 - bc.size.y / 2, 0);
             UpdateEdgeCollidersLying();
             states.isColliderUpright = false;
             states.isColliderLying = true;
@@ -300,7 +250,7 @@ public class PlayerController : FallingObjectController
     {
         if (!states.isColliderUpright)
         {
-            transform.position += new Vector3((bc.size.x / 2 - bc.size.y / 2) * direction, bc.size.x / 2 - bc.size.y / 2, 0);
+            transform.position += new Vector3((bc.size.x / 2 - bc.size.y / 2) * states.direction, bc.size.x / 2 - bc.size.y / 2, 0);
             bc.size = new Vector2(smallerDimension, biggerDimension);
             UpdateEdgeCollidersUpright();
             states.isColliderUpright = true;
@@ -313,12 +263,6 @@ public class PlayerController : FallingObjectController
     public bool GetIsSliding()
     {
         return states.isSliding;
-    }
-
-
-    public float GetDirection()
-    {
-        return direction;
     }
 
 }

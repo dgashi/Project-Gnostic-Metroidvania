@@ -18,5 +18,7 @@ public class PlayerStates : MonoBehaviour
     public bool hasTeleported = false;
     public bool dontStopX = false;
     public bool dontMoveX = false;
+    public bool isPreparingTeleport;
     public bool isInvincible;
+    public float direction = 1;
 }

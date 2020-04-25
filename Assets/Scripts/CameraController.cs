@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     GameObject player;
-    PlayerController playerScript;
+    PlayerStates playerStates;
     public float cameraSpeed;
     public float aheadDistance;
     public float aheadSpeedMultiplier;
@@ -15,22 +15,22 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectsWithTag("Player")[0];
-        playerScript = player.GetComponent<PlayerController>();
+        playerStates = player.GetComponent<PlayerStates>();
     }
 
     void FixedUpdate()
     {
         if (follow)
         {
-            if (playerScript.GetIsSliding())
+            if (playerStates.isSliding)
             {
                 if (lerp)
                 {
-                    transform.position = new Vector3(Mathf.Lerp(transform.position.x, player.transform.position.x + aheadDistance * playerScript.GetDirection(), Time.deltaTime * cameraSpeed * aheadSpeedMultiplier), Mathf.Lerp(transform.position.y, player.transform.position.y, Time.deltaTime * cameraSpeed * aheadSpeedMultiplier), transform.position.z);
+                    transform.position = new Vector3(Mathf.Lerp(transform.position.x, player.transform.position.x + aheadDistance * playerStates.direction, Time.deltaTime * cameraSpeed * aheadSpeedMultiplier), Mathf.Lerp(transform.position.y, player.transform.position.y, Time.deltaTime * cameraSpeed * aheadSpeedMultiplier), transform.position.z);
                 }
                 else
                 {
-                    transform.position = new Vector3(player.transform.position.x + aheadDistance * playerScript.GetDirection(), player.transform.position.y, transform.position.z);
+                    transform.position = new Vector3(player.transform.position.x + aheadDistance * playerStates.direction, player.transform.position.y, transform.position.z);
                 }
             }
             else

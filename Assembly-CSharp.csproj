@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scripts\Player\PlayerSpawnBlock.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSpawnDecoy.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerStates.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerTeleport.cs" />
     <Compile Include="Assets\Scripts\SpawnedBlockController.cs" />
     <Compile Include="Assets\Scripts\Utilities.cs" />
     <Compile Include="Assets\Scripts\WalkingEnemyController.cs" />

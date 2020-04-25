@@ -7,6 +7,7 @@ public class PlayerInput : MonoBehaviour
     PlayerStates states;
     PlayerSpawnDecoy spawnDecoy;
     PlayerSpawnBlock spawnBlock;
+    PlayerTeleport teleport;
 
     public Vector2 playerInput;
 
@@ -15,6 +16,7 @@ public class PlayerInput : MonoBehaviour
         states = GetComponent<PlayerStates>();
         spawnDecoy = GetComponent<PlayerSpawnDecoy>();
         spawnBlock = GetComponent<PlayerSpawnBlock>();
+        teleport = GetComponent<PlayerTeleport>();
     }
 
     void Update()
@@ -51,9 +53,9 @@ public class PlayerInput : MonoBehaviour
                 //Try to initiate slide
             }
             
-            if (Input.GetButton("L1"))
+            if (Input.GetButtonDown("L1") && !states.isSliding && !states.hasTeleported && !states.isPreparingTeleport)
             {
-                //Try to teleport
+                teleport.PrepareTeleport();
             }
             
             if (Input.GetButtonDown("R1") && Input.GetAxis("Vertical") < 0)

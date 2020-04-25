@@ -236,6 +236,7 @@ GameObject:
   - component: {fileID: 7702420117746715130}
   - component: {fileID: 6382195298311741220}
   - component: {fileID: 3627291368650243836}
+  - component: {fileID: 8662664182306619657}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -289,7 +290,9 @@ MonoBehaviour:
   hasTeleported: 0
   dontStopX: 0
   dontMoveX: 0
+  isPreparingTeleport: 0
   isInvincible: 0
+  direction: 1
 --- !u!114 &5219122875965314195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,10 +341,8 @@ MonoBehaviour:
   groundCheckDistance: 0.2
   wallCheckDistance: 0.2
   checkInset: 0.01
-  direction: 1
   sprite: {fileID: 5219122876833608075}
   teleportSprite: {fileID: 632436737}
-  block: {fileID: 0}
 --- !u!50 &5219122875965314193
 Rigidbody2D:
   serializedVersion: 4
@@ -446,6 +447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68d70a8ed38145a4a90d2eb151b4a40a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInput: {x: 0, y: 0}
 --- !u!114 &6382195298311741220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,6 +476,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 4257728159841134949, guid: 51766a499e98809409f3abb9730b699e,
     type: 3}
+--- !u!114 &8662664182306619657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5219122875965314192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 157feebffc989ee429bcc1c2cf82ae3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxTeleportDistance: 2
+  teleportDistance: 0
+  whatIsPlatform:
+    serializedVersion: 2
+    m_Bits: 256
+  whatIsDamage:
+    serializedVersion: 2
+    m_Bits: 2048
+  teleportSprite: {fileID: 632436737}
 --- !u!1 &5219122876149772580
 GameObject:
   m_ObjectHideFlags: 0
