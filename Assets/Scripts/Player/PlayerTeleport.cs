@@ -38,8 +38,6 @@ public class PlayerTeleport : MonoBehaviour
         //until the player lets go of the button
         while (!Input.GetButtonUp("L1"))
         {
-            Debug.Log("Preparing to teleport...");
-
             //Find the biggest distance with enough space to fit the player
             for (float distance = 0; distance <= maxTeleportDistance; distance += 0.1f)
             {
@@ -79,8 +77,7 @@ public class PlayerTeleport : MonoBehaviour
             transform.position = new Vector3(transform.position.x + states.direction * teleportDistance, transform.position.y, transform.position.z);
             states.hasTeleported = true;
         }
-
-        Debug.Log("Teleported!");
+        
         states.isPreparingTeleport = false;
         yield break;
     }

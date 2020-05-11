@@ -8,9 +8,12 @@ public class PlayerInput : MonoBehaviour
     PlayerSpawnDecoy spawnDecoy;
     PlayerSpawnBlock spawnBlock;
     PlayerTeleport teleport;
+    PlayerWallGrab wallGrab;
+    PlayerSlide slide;
     Movement movement;
 
-    public Vector2 playerInput;
+    public float dontGrabWallDelay;
+    float dontGrabWallTimer;
 
     void Start()
     {
@@ -18,31 +21,68 @@ public class PlayerInput : MonoBehaviour
         spawnDecoy = GetComponent<PlayerSpawnDecoy>();
         spawnBlock = GetComponent<PlayerSpawnBlock>();
         teleport = GetComponent<PlayerTeleport>();
+        wallGrab = GetComponent<PlayerWallGrab>();
+        slide = GetComponent<PlayerSlide>();
         movement = GetComponent<Movement>();
+
+        dontGrabWallTimer = 0;
     }
 
     void Update()
     {
         if (Time.timeScale != 0)
         {
-            if (!states.isSliding && !states.isGrabbed)
+            if (!states.dontMoveX && !states.isSliding && !states.isGrabbed)
             {
-                movement.MoveX(Input.GetAxis("Horizontal"), true);
+                movement.SetVelocityX(Input.GetAxis("Horizontal"), true);
             }
-            
-            if (Input.GetButton("R1"))
+
+            if (Input.GetButtonDown("X") && states.isCloseToGround)
             {
-                //Try to grab wall
+                if (states.isSliding)
+                {
+                    movement.SetVelocityY(1.7f / 2f, false);
+                }
+                else
+                {
+                    movement.SetVelocityY(1.7f, false);
+                }
             }
-            
-            if (Input.GetButtonDown("X"))
+            else if (Input.GetButtonDown("X") && states.isGrabbed)
             {
-                movement.MoveY(1.7f, false);
+                states.dontMoveX = true;
+                states.isGrabbed = false;
+                movement.SetVelocityX(-states.direction, false);
+                movement.SetVelocityY(1.7f, false);
+                dontGrabWallTimer = dontGrabWallDelay;
             }
-            
-            if (Input.GetButtonDown("R2"))
+            else if (Input.GetButtonDown("X") && !states.hasAirJumped && !states.isSliding)
             {
-                //Try to initiate slide
+                movement.SetVelocityY(1.7f, false);
+                states.hasAirJumped = true;
+                states.dontMoveX = false;
+            }
+
+            if (dontGrabWallTimer <= 0)
+            {
+                if (Input.GetButton("R1") && states.isTouchingWallInFront && !states.isSliding && !states.isGrabbed && !states.isTouchingGround && states.isColliderUpright)
+                {
+                    wallGrab.GrabWall();
+                }
+            }
+            else
+            {
+                dontGrabWallTimer -= Time.unscaledDeltaTime;
+            }
+
+            if (Input.GetButtonUp("R1") && states.isGrabbed)
+            {
+                states.isGrabbed = false;
+            }
+
+            if (Input.GetButtonDown("R2") && states.isCloseToGround && !states.isSliding && !states.isGrabbed)
+            {
+                slide.Slide();
             }
             
             if (Input.GetButtonDown("L1") && !states.isSliding && !states.hasTeleported && !states.isPreparingTeleport)

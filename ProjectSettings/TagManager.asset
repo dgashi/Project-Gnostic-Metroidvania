@@ -18,6 +18,7 @@ TagManager:
   - Teleport Sprite
   - Environmental Damage 1
   - Demon Damage 1
+  - Eye
   layers:
   - Default
   - TransparentFX
@@ -31,7 +32,7 @@ TagManager:
   - Characters
   - Falling Earth Block
   - Environmental Damage
-  - 
+  - Sensors
   - 
   - 
   - 

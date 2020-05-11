@@ -40,6 +40,9 @@ public class PlayerHealth : Damagable
         {
             currentHealth -= amount;
             healthText.text = "Health: " + currentHealth;
+            states.isSliding = false;
+            states.isGrabbed = false;
+            teleport.teleportSpriteRenderer.enabled = false;
             states.isInvincible = true;
             movement.velocity = Vector2.zero;
             Time.timeScale = 0f;
@@ -51,18 +54,6 @@ public class PlayerHealth : Damagable
             currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
             healthText.text = "Health: " + currentHealth;
         }
-    }
-
-    private void ResetToLastCheckpoint()
-    {
-        states.isSliding = false;
-        states.isGrabbed = false;
-        teleport.teleportSpriteRenderer.enabled = false;
-        transform.position = checkpoint.lastCheckPoint.position;
-        states.direction = Mathf.Sign(Input.GetAxis("Horizontal"));
-        transform.localScale = new Vector3(states.direction, 1, 1);
-        camController.SnapToPlayer();
-        states.isInvincible = false;
     }
 
     private IEnumerator ResetAfterDamage()
@@ -82,6 +73,15 @@ public class PlayerHealth : Damagable
         StartCoroutine(BlackToClear());
     }
 
+    private void ResetToLastCheckpoint()
+    {
+        movement.velocity = Vector2.zero;
+        transform.position = checkpoint.lastCheckPoint.position;
+        states.direction = Mathf.Sign(Input.GetAxis("Horizontal"));
+        transform.localScale = new Vector3(states.direction, 1, 1);
+        camController.SnapToPlayer();
+        states.isInvincible = false;
+    }
 
     private IEnumerator BlackToClear()
     {

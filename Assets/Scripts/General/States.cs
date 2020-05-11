@@ -8,7 +8,7 @@ public class States : MonoBehaviour
     public bool isSqueezedUpright;
     public bool isSqueezedLying;
     public bool isColliderLying;
-    public bool isColliderUpright;
+    public bool isColliderUpright = true;
     public bool isColliderBunched;
     public bool isInvincible;
     public bool isTouchingGround;

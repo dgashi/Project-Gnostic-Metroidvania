@@ -8,6 +8,7 @@ public class EdgeInput : MonoBehaviour
     public List<GameObject> collidingObjects;
     public List<PlatformController> collidingPlatformControllers;
     public LayerMask whatIsPlatform;
+    private bool connectToMovingPlatforms;
 
     public enum Direction
     {
@@ -69,7 +70,7 @@ public class EdgeInput : MonoBehaviour
             {
                 collidingPlatformControllers.Add(collision.gameObject.GetComponent<PlatformController>());
 
-                if (colliderPosition == Direction.Below && parentStates.isAffectedByGravity)
+                if (connectToMovingPlatforms)
                 {
                     collision.gameObject.GetComponent<PlatformController>().AddPassengerRB(parentrb);
                 }
@@ -90,7 +91,7 @@ public class EdgeInput : MonoBehaviour
             {
                 collidingPlatformControllers.Remove(collision.gameObject.GetComponent<PlatformController>());
 
-                if (colliderPosition == Direction.Below && parentStates.isAffectedByGravity)
+                if (connectToMovingPlatforms)
                 {
                     collision.gameObject.GetComponent<PlatformController>().RemovePassengerRB(parentrb);
                 }
@@ -121,5 +122,32 @@ public class EdgeInput : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SetConnectToMovingPlatforms(bool value)
+    {
+        connectToMovingPlatforms = value;
+        
+        if (value)
+        {
+            //Connect to touching moving platforms if set to true
+            foreach (PlatformController pc in collidingPlatformControllers)
+            {
+                pc.AddPassengerRB(parentrb);
+            }
+        }
+        else
+        {
+            //Disconnect from touching moving platforms if set to false
+            foreach (PlatformController pc in collidingPlatformControllers)
+            {
+                pc.RemovePassengerRB(parentrb);
+            }
+        }
+    }
+
+    public bool GetConnectToMovingPlatforms()
+    {
+        return connectToMovingPlatforms;
     }
 }

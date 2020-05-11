@@ -11,7 +11,6 @@ public class PlayerStates : States
     public bool isSqueezedTeleport = false;
     public bool hasAirJumped = false;
     public bool hasTeleported = false;
-    public bool dontStopX = false;
     public bool dontMoveX = false;
     public bool isPreparingTeleport;
 
@@ -41,7 +40,6 @@ public class PlayerStates : States
 
         if (isCloseToGround)
         {
-            dontStopX = false;
             dontMoveX = false;
             hasAirJumped = false;
             hasTeleported = false;

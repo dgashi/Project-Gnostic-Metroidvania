@@ -13,16 +13,31 @@ public class Movement : MonoBehaviour
     private States states;
     private Rigidbody2D rb;
 
+    EdgeInput belowColliderInput;
+
     void Start()
     {
         states = GetComponent<States>();
         rb = GetComponent<Rigidbody2D>();
+
+        foreach (EdgeInput i in GetComponentsInChildren<EdgeInput>())
+        {
+            if (i.colliderPosition == EdgeInput.Direction.Below)
+            {
+                belowColliderInput = i;
+            }
+        }
     }
 
     void Update()
     {
         if (states.isAffectedByGravity)
         {
+            //Make bottom edge collider connect to moving platforms
+            if (!belowColliderInput.GetConnectToMovingPlatforms())
+            {
+                belowColliderInput.SetConnectToMovingPlatforms(true);
+            }
 
             //Apply gravity;
             if (velocity.y <= 0)
@@ -34,8 +49,13 @@ public class Movement : MonoBehaviour
                 velocity.y += -gravity * Time.deltaTime;
             }
         }
+        else
+        {
+            //Make bottom edge collider not connect to moving platforms
+            belowColliderInput.SetConnectToMovingPlatforms(false);
+        }
 
-        //Stop moving if hitting ceiling or ground
+        //Stop moving vertically if hitting ceiling or ground
         if (velocity.y > 0 && states.isTouchingCeiling)
         {
             velocity.y = 0;
@@ -52,7 +72,7 @@ public class Movement : MonoBehaviour
         rb.velocity = velocity;
     }
 
-    public void MoveX(float modifier, bool accelerate)
+    public void SetVelocityX(float modifier, bool accelerate)
     {
         if (modifier != 0)
         {
@@ -70,7 +90,7 @@ public class Movement : MonoBehaviour
         }
     }
 
-    public void MoveY(float modifier, bool accelerate)
+    public void SetVelocityY(float modifier, bool accelerate)
     {
         if (accelerate)
         {
@@ -79,6 +99,24 @@ public class Movement : MonoBehaviour
         else
         {
             velocity.y = moveSpeed * modifier;
+        }
+    }
+
+    public void SetVelocity(float xModifier, float yModifier, bool accelerate)
+    {
+        if (xModifier != 0)
+        {
+            states.direction = Mathf.Sign(xModifier);
+            transform.localScale = new Vector3(states.direction, 1, 1);
+        }
+
+        if (accelerate)
+        {
+            velocity = Vector2.Lerp(velocity, new Vector2(moveSpeed * xModifier, moveSpeed * yModifier), Time.deltaTime * acceleration);
+        }
+        else
+        {
+            velocity = new Vector2(moveSpeed * xModifier, moveSpeed * yModifier);
         }
     }
 }
