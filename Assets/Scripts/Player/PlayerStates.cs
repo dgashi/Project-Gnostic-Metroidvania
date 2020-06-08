@@ -13,6 +13,8 @@ public class PlayerStates : States
     public bool hasTeleported = false;
     public bool dontMoveX = false;
     public bool isPreparingTeleport;
+    public bool isPreparingPossession = false;
+    public bool isPossessing = false;
 
     public float groundCheckDistance;
     public float wallCheckDistance;

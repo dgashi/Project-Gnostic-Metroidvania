@@ -11,9 +11,13 @@ public class PlayerInput : MonoBehaviour
     PlayerWallGrab wallGrab;
     PlayerSlide slide;
     Movement movement;
+    PlayerPossession possession;
 
     public float dontGrabWallDelay;
     float dontGrabWallTimer;
+
+    public float possessionInputDelay;
+    float possessionInputTimer;
 
     void Start()
     {
@@ -24,13 +28,15 @@ public class PlayerInput : MonoBehaviour
         wallGrab = GetComponent<PlayerWallGrab>();
         slide = GetComponent<PlayerSlide>();
         movement = GetComponent<Movement>();
+        possession = GetComponent<PlayerPossession>();
 
         dontGrabWallTimer = 0;
+        possessionInputTimer = possessionInputDelay;
     }
 
     void Update()
     {
-        if (Time.timeScale != 0)
+        if (Time.timeScale != 0 && !states.isPossessing)
         {
             if (!states.dontMoveX && !states.isSliding && !states.isGrabbed)
             {
@@ -98,6 +104,25 @@ public class PlayerInput : MonoBehaviour
             if (Input.GetButtonDown("L2"))
             {
                 spawnDecoy.SpawnDecoy();
+            }
+
+            if (Input.GetButton("Square"))
+            {
+                if (possessionInputTimer <= 0)
+                {
+                    Debug.Log("Looking for target...");
+                    possession.LookForTarget();
+                }
+                else
+                {
+                    Debug.Log("Charging possession...");
+                    possessionInputTimer -= Time.deltaTime;
+                }
+            }
+
+            if (Input.GetButtonUp("Square"))
+            {
+                possession.Possession();
             }
         }
     }

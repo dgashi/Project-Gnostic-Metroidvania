@@ -34,23 +34,4 @@ public class ContactDamager : MonoBehaviour
             damagedAlready.Remove(collision.gameObject);
         }
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Damagable damagable = collision.gameObject.GetComponent<Damagable>();
-
-        if (damagable && !damagedAlready.Contains(collision.gameObject))
-        {
-            damagable.TakeDamage(damageType, amount);
-            damagedAlready.Add(collision.gameObject);
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (damagedAlready.Contains(collision.gameObject))
-        {
-            damagedAlready.Remove(collision.gameObject);
-        }
-    }
 }

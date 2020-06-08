@@ -62,14 +62,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Abstract classes\AI.cs" />
     <Compile Include="Assets\Scripts\Abstract classes\Damagable.cs" />
+    <Compile Include="Assets\Scripts\Abstract classes\Possessable.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\CameraMoveWASD.cs" />
+    <Compile Include="Assets\Scripts\Decoy\DecoyHealth.cs" />
     <Compile Include="Assets\Scripts\DecoyController.cs" />
     <Compile Include="Assets\Scripts\FallingObjectController.cs" />
     <Compile Include="Assets\Scripts\General\ColliderManager.cs" />
     <Compile Include="Assets\Scripts\General\ContactDamager.cs" />
     <Compile Include="Assets\Scripts\General\Damage.cs" />
+    <Compile Include="Assets\Scripts\General\DemonPossessable.cs" />
     <Compile Include="Assets\Scripts\General\Detection.cs" />
     <Compile Include="Assets\Scripts\General\EdgeInput.cs" />
     <Compile Include="Assets\Scripts\General\Movement.cs" />
@@ -77,6 +81,7 @@
     <Compile Include="Assets\Scripts\General\States.cs" />
     <Compile Include="Assets\Scripts\General\TargetChoosing.cs" />
     <Compile Include="Assets\Scripts\General\VisibleTarget.cs" />
+    <Compile Include="Assets\Scripts\General\WalkingChasingAI.cs" />
     <Compile Include="Assets\Scripts\Old Rigidbody\EarthBlockController.cs" />
     <Compile Include="Assets\Scripts\Old Rigidbody\PlayerControllerOld.cs" />
     <Compile Include="Assets\Scripts\PlatformController.cs" />
@@ -85,6 +90,8 @@
     <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMana.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerPossession.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerProximitySensor.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSlide.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSpawnBlock.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSpawnDecoy.cs" />
@@ -93,7 +100,6 @@
     <Compile Include="Assets\Scripts\Player\PlayerWallGrab.cs" />
     <Compile Include="Assets\Scripts\SpawnedBlockController.cs" />
     <Compile Include="Assets\Scripts\Utilities.cs" />
-    <Compile Include="Assets\Scripts\WalkingEnemyController.cs" />
     <Compile Include="Assets\SpawnDemon.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Don-Oskar Gashi/Documents/GitHub/Project-Gnostic-Metroidvania/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

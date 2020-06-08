@@ -16,6 +16,7 @@ public class States : MonoBehaviour
     public bool isTouchingWallInFront;
     public bool isTouchingWallBehind;
     public bool isAffectedByGravity;
+    public bool isPossessed;
     public LayerMask whatIsDamage;
     public LayerMask whatIsPlatform;
 }

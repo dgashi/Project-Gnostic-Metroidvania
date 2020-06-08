@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8156232062106573446}
   - component: {fileID: 8156232062106573441}
   m_Layer: 0
-  m_Name: FrontCollider (1)
+  m_Name: FrontCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,6 +50,9 @@ MonoBehaviour:
   whatIsPlatform:
     serializedVersion: 2
     m_Bits: 256
+  colliderPosition: 2
+  parentrb: {fileID: 0}
+  parentStates: {fileID: 0}
 --- !u!68 &8156232062106573441
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -78,9 +81,13 @@ GameObject:
   m_Component:
   - component: {fileID: 8156232062290120096}
   - component: {fileID: 8156232062290120099}
-  - component: {fileID: 8156232062290120097}
   - component: {fileID: 8156232062290120098}
   - component: {fileID: 8156232062290120109}
+  - component: {fileID: 2147777805160889155}
+  - component: {fileID: 4777566323634354083}
+  - component: {fileID: 2706099028254358326}
+  - component: {fileID: 6453949944768050243}
+  - component: {fileID: 2635122419566990233}
   m_Layer: 9
   m_Name: Decoy
   m_TagString: Decoy
@@ -156,38 +163,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8156232062290120097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8156232062290120108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 552dde6ff590ff949b7d839c38a0b474, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gravity: 10
-  whatIsPlatform:
-    serializedVersion: 2
-    m_Bits: 256
-  aboveColliderObject: {fileID: 8156232062436865558}
-  aboveInput: {fileID: 0}
-  belowColliderObject: {fileID: 8156232062843196959}
-  belowInput: {fileID: 0}
-  frontColliderObject: {fileID: 8156232062106573440}
-  frontInput: {fileID: 0}
-  backColliderObject: {fileID: 8156232062910526187}
-  backInput: {fileID: 0}
-  velocity: {x: 0, y: 0}
-  rb: {fileID: 0}
-  bc: {fileID: 0}
-  platformBelowController: {fileID: 0}
-  isTouchingGround: 0
-  isTouchingCeiling: 0
-  isTouchingWallInFront: 0
-  isInvincible: 0
 --- !u!61 &8156232062290120098
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -235,6 +210,89 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &2147777805160889155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8156232062290120108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbafade63e96e194c80cc195bddf185e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4777566323634354083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8156232062290120108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98c8b2c8eb5c0e94b8584993235971f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0}
+  moveSpeed: 0
+  acceleration: 0
+  gravity: 20
+--- !u!114 &2706099028254358326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8156232062290120108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf06273734abe2b4ba4b30820b5ae308, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction: 1
+  isSqueezedUpright: 0
+  isSqueezedLying: 0
+  isColliderLying: 0
+  isColliderUpright: 1
+  isColliderBunched: 0
+  isInvincible: 0
+  isTouchingGround: 0
+  isTouchingCeiling: 0
+  isTouchingWallInFront: 0
+  isTouchingWallBehind: 0
+  isAffectedByGravity: 1
+  whatIsDamage:
+    serializedVersion: 2
+    m_Bits: 2048
+  whatIsPlatform:
+    serializedVersion: 2
+    m_Bits: 256
+--- !u!114 &6453949944768050243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8156232062290120108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61e3d281645085a49a9a3cd2aa7632d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1
+--- !u!114 &2635122419566990233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8156232062290120108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5957c72a46606d4e8dacc86c9e8600a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8156232062436865558
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,7 +305,7 @@ GameObject:
   - component: {fileID: 8156232062436865556}
   - component: {fileID: 8156232062436865559}
   m_Layer: 0
-  m_Name: AboveCollider (1)
+  m_Name: AboveCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,6 +343,9 @@ MonoBehaviour:
   whatIsPlatform:
     serializedVersion: 2
     m_Bits: 256
+  colliderPosition: 0
+  parentrb: {fileID: 0}
+  parentStates: {fileID: 0}
 --- !u!68 &8156232062436865559
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -315,7 +376,7 @@ GameObject:
   - component: {fileID: 8156232062843196957}
   - component: {fileID: 8156232062843196956}
   m_Layer: 0
-  m_Name: BelowCollider (1)
+  m_Name: BelowCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -353,6 +414,9 @@ MonoBehaviour:
   whatIsPlatform:
     serializedVersion: 2
     m_Bits: 256
+  colliderPosition: 1
+  parentrb: {fileID: 0}
+  parentStates: {fileID: 0}
 --- !u!68 &8156232062843196956
 EdgeCollider2D:
   m_ObjectHideFlags: 0
@@ -383,7 +447,7 @@ GameObject:
   - component: {fileID: 8156232062910526185}
   - component: {fileID: 8156232062910526184}
   m_Layer: 0
-  m_Name: BackCollider (1)
+  m_Name: BackCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -421,6 +485,9 @@ MonoBehaviour:
   whatIsPlatform:
     serializedVersion: 2
     m_Bits: 256
+  colliderPosition: 3
+  parentrb: {fileID: 0}
+  parentStates: {fileID: 0}
 --- !u!68 &8156232062910526184
 EdgeCollider2D:
   m_ObjectHideFlags: 0

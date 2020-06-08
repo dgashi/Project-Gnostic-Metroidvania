@@ -39,12 +39,13 @@ public class Detection : MonoBehaviour
     private void Update()
     {
         //Draw lines to visualize field of view
-        Debug.DrawLine(transform.position, transform.position + transform.up * detectionDistance, Color.red, .0001f);
+        //Draw green center line
+        Debug.DrawLine(transform.position, transform.position + transform.up * detectionDistance, Color.green, .0001f);
 
-        //broken
+        //Draw blue lides at the edge of the field of vision
         for (int i = -1; i < 2; i = i + 2)
         {
-            float debugLineAngle = Mathf.Deg2Rad * (detectionAngle * 0.5f * i);
+            float debugLineAngle = Mathf.Deg2Rad * ((detectionAngle * 0.5f * i) + 90f);
             Vector2 debugLineAngleVector = new Vector3(Mathf.Cos(debugLineAngle), Mathf.Sin(debugLineAngle));
             Debug.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y) + debugLineAngleVector * detectionDistance, Color.blue, .0001f);
         }
@@ -109,7 +110,7 @@ public class Detection : MonoBehaviour
                     }
 
                     //Draw line to seen target for debug purposes
-                    Debug.DrawLine(transform.position, i.transform.position, Color.blue, .0001f);
+                    Debug.DrawLine(transform.position, i.transform.position, Color.red, .0001f);
                 }
                 //If something blocks the view, remove target from visible targets
                 else if (seenTargets.Contains(i))
